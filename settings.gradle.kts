@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -19,6 +20,16 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Weather App"
+rootProject.name = "WeatherApp"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
- 
+include(":weather:data")
+include(":weather:domain")
+include(":weather:presentation")
+include(":core:presentation:designsystem")
+include(":core:presentation:ui")
+include(":core:domain")
+include(":core:data")
+include(":core:database")
+include(":weather:location")
+include(":weather:network")
