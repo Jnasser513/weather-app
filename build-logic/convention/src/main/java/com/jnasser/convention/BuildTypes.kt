@@ -18,8 +18,8 @@ internal fun Project.configureBuildTypes(
         }
 
         val apiKey = gradleLocalProperties(rootDir, providers).getProperty("API_KEY")
-        when(extensionType) {
 
+        when(extensionType) {
             ExtensionType.APPLICATION -> {
                 extensions.configure<ApplicationExtension> {
                     buildTypes {
@@ -49,16 +49,14 @@ internal fun Project.configureBuildTypes(
 }
 
 private fun BuildType.configureDebugBuildType(apiKey: String) {
-    buildConfigField("String", "API_KEY", "\"$apiKey\"")
-    buildConfigField("String", "BASE_URL", "\"https://runique.pl-coding.com:8080\"")
+    //TODO("Add configuration variables")
 }
 
 private fun BuildType.configureReleaseBuildType(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
     apiKey: String
 ) {
-    buildConfigField("String", "API_KEY", "\"$apiKey\"")
-    buildConfigField("String", "BASE_URL", "\"https://runique.pl-coding.com:8080\"")
+    //TODO("Add configuration variables")
 
     isMinifyEnabled = true
     proguardFiles(

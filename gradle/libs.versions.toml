@@ -77,6 +77,7 @@ projectMinSdkVersion = "24"
 projectTargetSdkVersion = "35"
 projectCompileSdkVersion = "35"
 projectVersionCode = "1"
+storage = "1.4.2"
 
 [libraries]
 # Jetpack Compose UI Libraries
@@ -168,6 +169,7 @@ assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assert
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines-test" }
+androidx-storage = { group = "androidx.test.services", name = "storage", version.ref = "storage" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -180,18 +182,17 @@ room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 # Convention Plugins
-weatherapp-android-application = { id = "runique.android.application", version = "unspecified" }
-weatherapp-android-application-compose = { id = "runique.android.application.compose", version = "unspecified" }
-weatherapp-android-library = { id = "runique.android.library", version = "unspecified" }
-weather-android-library-compose = { id = "runique.android.library.compose", version = "unspecified" }
-weatherapp-android-feature-ui = { id = "runique.android.feature.ui", version = "unspecified" }
-weatherapp-android-room = { id = "runique.android.room", version = "unspecified" }
-weatherapp-jvm-library = { id = "runique.jvm.library", version = "unspecified" }
-weatherapp-jvm-ktor = { id = "runique.jvm.ktor", version = "unspecified" }
-weatherapp-jvm-junit5 = { id = "runique.jvm.junit5", version = "unspecified" }
-weatherapp-android-junit5 = { id = "runique.android.junit5", version = "unspecified" }
-weatherapp-android-dynamic-feature = { id = "runique.android.dynamic.feature", version = "unspecified" }
-weatherapp-android-application-wear-compose = { id = "runique.android.application.wear.compose", version = "unspecified" }
+weatherapp-android-application = { id = "weatherapp.android.application", version = "unspecified" }
+weatherapp-android-application-compose = { id = "weatherapp.android.application.compose", version = "unspecified" }
+weatherapp-android-library = { id = "weatherapp.android.library", version = "unspecified" }
+weatherapp-android-library-compose = { id = "weatherapp.android.library.compose", version = "unspecified" }
+weatherapp-android-feature-ui = { id = "weatherapp.android.feature.ui", version = "unspecified" }
+weatherapp-android-room = { id = "weatherapp.android.room", version = "unspecified" }
+weatherapp-jvm-library = { id = "weatherapp.jvm.library", version = "unspecified" }
+weatherapp-jvm-ktor = { id = "weatherapp.jvm.ktor", version = "unspecified" }
+weatherapp-jvm-junit5 = { id = "weatherapp.jvm.junit5", version = "unspecified" }
+weatherapp-android-junit5 = { id = "weatherapp.android.junit5", version = "unspecified" }
+weatherapp-android-dynamic-feature = { id = "weatherapp.android.dynamic.feature", version = "unspecified" }
 
 [bundles]
 compose = [

@@ -1,58 +1,21 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.weatherapp.android.application.compose)
+    alias(libs.plugins.weatherapp.jvm.ktor)
 }
 
 android {
     namespace = "com.jnasser.weatherapp"
-    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.jnasser.weatherapp"
-        minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
     }
 }
 
+gradle.startParameter.excludedTaskNames.addAll(
+    gradle.startParameter.taskNames.filter { it.contains("testClasses") }
+)
+
 dependencies {
-
-    // Modules
-    implementation(projects.core.presentation.designsystem)
-    implementation(projects.core.presentation.ui)
-    implementation(projects.core.domain)
-    implementation(projects.core.data)
-    implementation(projects.core.database)
-
-    implementation(projects.weather.domain)
-    implementation(projects.weather.data)
-    implementation(projects.weather.presentation)
-    implementation(projects.weather.location)
-    implementation(projects.weather.network)
 
     // Compose
     implementation(libs.androidx.activity.compose)
@@ -82,4 +45,17 @@ dependencies {
 
     // Timber
     implementation(libs.timber)
+
+    // Modules
+    implementation(projects.core.presentation.designsystem)
+    implementation(projects.core.presentation.ui)
+    implementation(projects.core.domain)
+    implementation(projects.core.data)
+    implementation(projects.core.database)
+
+    implementation(projects.weather.domain)
+    implementation(projects.weather.data)
+    implementation(projects.weather.presentation)
+    implementation(projects.weather.location)
+    implementation(projects.weather.network)
 }

@@ -7,8 +7,10 @@ class AndroidJUnit5ConventionPlugin: Plugin<Project> {
 
     override fun apply(target: Project) {
         target.run {
-            pluginManager.apply("runique.jvm.junit5")
-            pluginManager.apply("de.mannodermaus.android-junit5")
+            pluginManager.run {
+                apply("weatherapp.jvm.junit5")
+                apply("de.mannodermaus.android-junit5")
+            }
 
             dependencies {
                 "androidTestImplementation"(libs.findLibrary("junit5.api").get())
