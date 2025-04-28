@@ -12,5 +12,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.constraintlayout.compose)
     api(libs.androidx.material3)
 }

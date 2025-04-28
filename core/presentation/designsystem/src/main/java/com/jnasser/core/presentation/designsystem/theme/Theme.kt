@@ -1,18 +1,18 @@
-package com.jnasser.core.presentation.designsystem
+package com.jnasser.core.presentation.designsystem.theme
 
 import android.app.Activity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 val DarkColorScheme = darkColorScheme(
     primary = WeatherDarkBlue,
     background = WeatherDarkPurple,
-    surface = WeatherGrey
+    surface = WeatherGrey,
+    onSurface = WeatherWhite
 )
 
 @Composable

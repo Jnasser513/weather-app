@@ -1,4 +1,4 @@
-package com.jnasser.core.presentation.designsystem
+package com.jnasser.core.presentation.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,6 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.jnasser.core.presentation.designsystem.R
 
 val Inter = FontFamily(
     Font(
@@ -48,19 +49,25 @@ val Typography = Typography(
         fontFamily = Inter,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        lineHeight = 24.sp
     ),
     labelLarge = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 24.sp
+        lineHeight = 24.sp,
+        color = WeatherWhite
     ),
     headlineMedium = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp,
         color = WeatherWhite
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 32.sp,
+        color = WeatherGrey
     )
 )

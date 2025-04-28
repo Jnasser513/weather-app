@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="follow_up">Follow up</string>
+    <string name="unfollow_up">Unfollow</string>
+</resources>

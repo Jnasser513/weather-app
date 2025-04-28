@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jnasser.core.presentation.designsystem.WeatherAppTheme
+import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_saved_list.WeatherSavedListAction
 import com.jnasser.weather.presentation.weather_saved_list.WeatherSavedListState
@@ -27,8 +27,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WeatherSavedListScreenRoot(
-    onCityDetail: (Long) -> Unit,
-    viewModel: WeatherSavedListViewModel = koinViewModel()
+    viewModel: WeatherSavedListViewModel = koinViewModel(),
+    onCityDetail: (Long) -> Unit
 ) {
     WeatherSavedListScreen(
         state = viewModel.state,
