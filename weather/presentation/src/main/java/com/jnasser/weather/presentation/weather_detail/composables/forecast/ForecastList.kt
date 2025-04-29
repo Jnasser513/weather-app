@@ -25,7 +25,7 @@ fun ForecastList(
         ) {
             ForecastItem(
                 forecastDataUi = it,
-                isSelected = true
+                isSelected = false
             ) {}
         }
     }

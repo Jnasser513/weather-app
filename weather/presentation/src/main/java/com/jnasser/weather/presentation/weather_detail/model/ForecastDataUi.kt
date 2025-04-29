@@ -5,5 +5,5 @@ data class ForecastDataUi(
     val icon: String,
     val maxTemperature: String,
     val minTemperature: String,
-    val progress: Double
+    val progress: Float
 )

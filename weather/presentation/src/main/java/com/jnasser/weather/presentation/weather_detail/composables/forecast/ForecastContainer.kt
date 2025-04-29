@@ -55,21 +55,21 @@ fun ForecastContainer(
                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
                    maxTemperature = "48",
                    minTemperature = "56",
-                   progress = 85.4454
+                   progress = 0.25f
                ),
                ForecastDataUi(
                    title = "Thu",
                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
                    maxTemperature = "48",
                    minTemperature = "56",
-                   progress = 85.4454
+                   progress = 0.48f
                ),
                ForecastDataUi(
                    title = "Fri",
                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
                    maxTemperature = "48",
                    minTemperature = "56",
-                   progress = 85.4454
+                   progress = 0.91f
                )
            )
        )
