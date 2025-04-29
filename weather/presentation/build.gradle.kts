@@ -14,4 +14,5 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.timber)
     implementation(libs.androidx.storage)
+    implementation(libs.coil.compose)
 }

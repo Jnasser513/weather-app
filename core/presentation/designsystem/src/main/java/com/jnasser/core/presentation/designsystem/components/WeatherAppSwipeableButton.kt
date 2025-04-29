@@ -80,7 +80,7 @@ fun WeatherAppAnimatedSwipeableButton(
         ) {
             if(it) {
                 WeatherAppSwipeableButton(
-                    modifier = Modifier
+                    modifier = modifier
                         .height(56.dp)
                         .width(buttonWidth)
                         .animateContentSize(tween(durationMillis = 500)),

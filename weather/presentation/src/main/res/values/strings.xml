@@ -3,4 +3,7 @@
     <string name="saved_cities">Ciudades guardadas</string>
     <string name="map">Map</string>
     <string name="temperature_description">Its currently %s and %s outside.\nFeel like %s</string>
+    <string name="daily">Daily</string>
+    <string name="hourly">Hourly</string>
+    <string name="forecast">Forescast</string>
 </resources>
