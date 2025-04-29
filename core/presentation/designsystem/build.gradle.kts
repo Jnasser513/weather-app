@@ -7,6 +7,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.domain)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)

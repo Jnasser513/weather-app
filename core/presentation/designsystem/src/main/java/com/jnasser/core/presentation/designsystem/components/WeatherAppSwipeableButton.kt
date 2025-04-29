@@ -1,6 +1,15 @@
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -30,12 +39,61 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.jnasser.core.domain.extensions.textOrAlternative
 import com.jnasser.core.presentation.designsystem.R
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
+import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 enum class ConfirmationState {
     Default, Confirmed
+}
+
+@Composable
+fun WeatherAppAnimatedSwipeableButton(
+    modifier: Modifier = Modifier,
+    initialState: Boolean = true,
+    buttonText: String,
+    buttonTextAlternative: String? = null,
+    draggableIconActive: @Composable () -> Unit,
+    draggableIconInactive: @Composable () -> Unit,
+    onComplete: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    
+    val buttonWidth by animateDpAsState(
+        targetValue = if(expanded) 140.dp else 56.dp,
+        animationSpec = tween(500)
+    )
+
+    LaunchedEffect(Unit) {
+        delay(500)
+        expanded = true
+    }
+
+    if(expanded) {
+        AnimatedContent(
+            targetState = expanded,
+            transitionSpec = {
+                fadeIn(tween(300)) togetherWith fadeOut(tween(300))
+            }
+        ) {
+            if(it) {
+                WeatherAppSwipeableButton(
+                    modifier = Modifier
+                        .height(56.dp)
+                        .width(buttonWidth)
+                        .animateContentSize(tween(durationMillis = 500)),
+                    initialState = initialState,
+                    buttonText = initialState.textOrAlternative(buttonText),
+                    buttonTextAlternative = initialState.textOrAlternative(buttonTextAlternative.orEmpty(), buttonText),
+                    draggableIconActive = draggableIconActive,
+                    draggableIconInactive = draggableIconInactive,
+                    onComplete = onComplete
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -50,7 +108,7 @@ fun WeatherAppSwipeableButton(
     onComplete: () -> Unit
 ) {
     val width = 140.dp
-    val dragSize = 50.dp
+    val dragSize = 56.dp
     val density = LocalDensity.current
 
     val pxDistance = with(density) { (width - dragSize).toPx() }
@@ -84,6 +142,10 @@ fun WeatherAppSwipeableButton(
 
         val isComplete = state.currentValue == ConfirmationState.Confirmed
 
+        LaunchedEffect(Unit) {
+            delay(200)
+        }
+
         Text(
             modifier = Modifier.constrainAs(text) {
                 if(isComplete) {
@@ -102,7 +164,7 @@ fun WeatherAppSwipeableButton(
         DraggableControl(
             modifier = Modifier
                 .constrainAs(draggable) {
-                    if(!isComplete) start.linkTo(parent.start)
+                    if (!isComplete) start.linkTo(parent.start)
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                 }
@@ -157,7 +219,7 @@ private fun DraggableControl(
 @Composable
 private fun WeatherAppSwipeableButtonPreview() {
     WeatherAppTheme {
-        WeatherAppSwipeableButton(
+        WeatherAppAnimatedSwipeableButton(
             buttonText = stringResource(R.string.follow_up),
             initialState = true,
             buttonTextAlternative = stringResource(R.string.unfollow_up),

@@ -1,7 +1,7 @@
 package com.jnasser.core.domain.city
 
-import com.jnasser.core.domain.city.DefaultValues.EMPTY_LONG
-import com.jnasser.core.domain.city.DefaultValues.EMPTY_STRING
+import com.jnasser.core.domain.DefaultValues.EMPTY_LONG
+import com.jnasser.core.domain.DefaultValues.EMPTY_STRING
 
 data class Weather(
     val id: Long = EMPTY_LONG,

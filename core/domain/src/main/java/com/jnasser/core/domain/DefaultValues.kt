@@ -1,4 +1,4 @@
-package com.jnasser.core.domain.city
+package com.jnasser.core.domain
 
 object DefaultValues {
     const val EMPTY_STRING = ""

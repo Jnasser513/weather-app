@@ -1,5 +1,6 @@
 package com.jnasser.weather.presentation.weather_detail.composables
 
+import WeatherAppAnimatedSwipeableButton
 import WeatherAppSwipeableButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -79,7 +80,7 @@ fun WeatherDetailScreen(
                 )
             )
         },
-        floatingActionButton = { WeatherAppSwipeableButton(
+        floatingActionButton = { WeatherAppAnimatedSwipeableButton(
             buttonText = stringResource(com.jnasser.core.presentation.designsystem.R.string.follow_up),
             buttonTextAlternative = stringResource(com.jnasser.core.presentation.designsystem.R.string.unfollow_up),
             draggableIconActive = {
