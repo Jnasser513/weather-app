@@ -47,7 +47,7 @@ fun ForecastItem(
                 onClick()
             }
             .background(
-                color = if (isSelected) Color(0x3350538D) else Color.Transparent
+                color = if (isSelected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f) else Color.Transparent
             )
             .padding(horizontal = 10.dp),
         verticalArrangement = Arrangement.Center,

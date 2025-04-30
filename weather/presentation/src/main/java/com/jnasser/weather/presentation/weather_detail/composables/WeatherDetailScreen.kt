@@ -2,6 +2,7 @@ package com.jnasser.weather.presentation.weather_detail.composables
 
 import WeatherAppAnimatedSwipeableButton
 import WeatherAppSwipeableButton
+import android.widget.Space
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,6 +36,8 @@ import com.jnasser.weather.presentation.weather_detail.WeatherDetailAction
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailState
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
 import com.jnasser.weather.presentation.weather_detail.composables.forecast.ForecastContainer
+import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
+import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -115,8 +118,17 @@ fun WeatherDetailScreen(
                 text = text,
                 style = MaterialTheme.typography.headlineMedium
             )
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(40.dp))
             ForecastContainer()
+            Spacer(Modifier.height(30.dp))
+            WindContainer(
+                windDataUi = WindDataUi(
+                    "Gentle Breeze",
+                    "ESE",
+                    "9",
+                    "14"
+                )
+            )
         }
     }
 }

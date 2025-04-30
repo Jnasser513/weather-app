@@ -15,4 +15,5 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.storage)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.constraintlayout.compose)
 }

@@ -6,4 +6,9 @@
     <string name="daily">Daily</string>
     <string name="hourly">Hourly</string>
     <string name="forecast">Forescast</string>
+    <string name="map_image">Map image</string>
+    <string name="wind">Wind</string>
+    <string name="velocity">%s %s</string>
+    <string name="gusts">"Gusts: "</string>
+    <string name="home">Home</string>
 </resources>
