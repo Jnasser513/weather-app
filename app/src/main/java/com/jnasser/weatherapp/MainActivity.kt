@@ -9,6 +9,7 @@ import com.jnasser.core.domain.city.Weather
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailState
 import com.jnasser.weather.presentation.weather_detail.composables.WeatherDetailScreen
+import com.jnasser.weather.presentation.weather_detail.composables.WeatherDetailScreenRoot
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,17 +17,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatherAppTheme {
-                WeatherDetailScreen(
-                    WeatherDetailState(
-                        isLoading = false,
-                        city = CityDetail(
-                            name = "San Francisco, CA",
-                            temperature = "50",
-                            temperatureFeels = "53",
-                            weather = Weather(description = "partly cloudy")
-                        )
-                    )
-                ) { }
+                WeatherDetailScreenRoot()
             }
         }
     }

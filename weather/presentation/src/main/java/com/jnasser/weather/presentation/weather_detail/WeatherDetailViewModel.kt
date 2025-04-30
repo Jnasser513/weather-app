@@ -1,5 +1,6 @@
 package com.jnasser.weather.presentation.weather_detail
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,6 +18,7 @@ class WeatherDetailViewModel: ViewModel() {
             is WeatherDetailAction.OnFollowUp -> TODO()
             is WeatherDetailAction.OnRemoveFollow -> TODO()
             is WeatherDetailAction.OnSelectDay -> TODO()
+            is WeatherDetailAction.OnChangeWindUnit -> state = state.copy(windUnit = action.unit)
             else -> Unit
         }
     }

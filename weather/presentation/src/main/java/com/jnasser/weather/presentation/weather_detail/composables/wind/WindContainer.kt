@@ -37,11 +37,15 @@ import com.jnasser.core.domain.enums.WindUnitsEnum
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.core.presentation.designsystem.theme.WeatherGrey
 import com.jnasser.weather.presentation.R
+import com.jnasser.weather.presentation.weather_detail.WeatherDetailAction
 import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
 
 @Composable
 fun WindContainer(
-    modifier: Modifier = Modifier, windDataUi: WindDataUi
+    modifier: Modifier = Modifier,
+    windDataUi: WindDataUi,
+    windUnit: WindUnitsEnum,
+    onAction: (WeatherDetailAction) -> Unit
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -100,7 +104,10 @@ fun WindContainer(
                     start.linkTo(parent.start)
                     bottom.linkTo(parent.bottom)
                 }
-                .padding(10.dp), velocity = windDataUi.velocity, gust = windDataUi.gust
+                .padding(10.dp),
+            velocity = windDataUi.velocity,
+            gust = windDataUi.gust,
+            windUnit = windUnit
         )
         HomeIcon(
             modifier = Modifier.constrainAs(home) {
@@ -123,7 +130,9 @@ fun WindContainer(
                 bottom.linkTo(parent.bottom)
             }.padding(horizontal = 10.dp, vertical = 5.dp),
             units = WindUnitsEnum.entries
-        )
+        ) { unit ->
+            onAction(WeatherDetailAction.OnChangeWindUnit(unit))
+        }
     }
 }
 
@@ -134,7 +143,8 @@ private fun WindContainerPreview() {
         WindContainer(
             windDataUi = WindDataUi(
                 title = "Gentle Breeze", direction = "ESE", velocity = "9", gust = "14"
-            )
-        )
+            ),
+            windUnit = WindUnitsEnum.MILES
+        ) {}
     }
 }

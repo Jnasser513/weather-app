@@ -11,11 +11,15 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import com.jnasser.core.domain.enums.WindUnitsEnum
 import com.jnasser.weather.presentation.R
 
 @Composable
 fun WindGustData(
-    modifier: Modifier = Modifier, velocity: String, gust: String
+    modifier: Modifier = Modifier,
+    velocity: String,
+    gust: String,
+    windUnit: WindUnitsEnum
 ) {
     Column(
         modifier = modifier
@@ -37,7 +41,7 @@ fun WindGustData(
                     fontSize = 14.sp
                 )
             ) {
-                append(" mph")
+                append(" ${windUnit.symbol}")
             }
         })
         Text(text = buildAnnotatedString {
@@ -57,7 +61,7 @@ fun WindGustData(
                     fontSize = 13.sp
                 )
             ) {
-                append(stringResource(R.string.velocity, gust, "mph"))
+                append(stringResource(R.string.velocity, gust, windUnit.symbol))
             }
         })
     }

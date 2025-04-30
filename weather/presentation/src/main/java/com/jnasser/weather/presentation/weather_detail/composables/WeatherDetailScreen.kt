@@ -56,7 +56,8 @@ fun WeatherDetailScreenRoot(
 
 @Composable
 fun WeatherDetailScreen(
-    state: WeatherDetailState, onAction: (WeatherDetailAction) -> Unit
+    state: WeatherDetailState,
+    onAction: (WeatherDetailAction) -> Unit
 ) {
     WeatherAppScaffold(topApBar = {
         WeatherTopAppBar(
@@ -127,7 +128,9 @@ fun WeatherDetailScreen(
                     "ESE",
                     "9",
                     "14"
-                )
+                ),
+                windUnit = state.windUnit,
+                onAction = onAction
             )
         }
     }
