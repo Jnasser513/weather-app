@@ -19,7 +19,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -34,7 +37,9 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import com.jnasser.core.domain.enums.WindUnitsEnum
+import com.jnasser.core.presentation.designsystem.components.WindFieldOverlay
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
+import com.jnasser.core.presentation.designsystem.theme.WeatherDarkBlue
 import com.jnasser.core.presentation.designsystem.theme.WeatherGrey
 import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailAction
@@ -57,19 +62,44 @@ fun WindContainer(
     ) {
         val (title, map, home, gust, windDirection, windUnits) = createRefs()
 
-        Image(
-            modifier = Modifier
-                .constrainAs(map) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }
-                .fillMaxSize(),
-            painter = painterResource(R.drawable.map),
-            contentDescription = stringResource(R.string.map_image),
-            contentScale = ContentScale.FillBounds
-        )
+        Box(
+            modifier = Modifier.constrainAs(map) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+            }.fillMaxSize()
+        ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(0.3f),
+                painter = painterResource(R.drawable.map),
+                contentDescription = stringResource(R.string.map_image),
+                contentScale = ContentScale.FillBounds
+            )
+
+            WindFieldOverlay(
+                modifier = Modifier.fillMaxSize(),
+                streakCount = 100,
+                targetPoint = Offset(0.2f, 0.2f)
+            )
+
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                WeatherDarkBlue.copy(0.2f)
+                            ),
+                            center = Offset.Unspecified,
+                            radius = 500f
+                        )
+                    )
+            )
+        }
 
         Text(
             modifier = Modifier

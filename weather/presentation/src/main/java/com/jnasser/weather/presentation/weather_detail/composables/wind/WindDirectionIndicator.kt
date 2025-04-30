@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jnasser.core.presentation.designsystem.theme.WeatherGrey
 
 @Composable
 fun WindDirectionIndicator(
@@ -22,7 +21,7 @@ fun WindDirectionIndicator(
     Box(
         modifier = modifier
             .size(40.dp)
-            .border(width = 2.dp, color = WeatherGrey, shape = CircleShape),
+            .border(width = 2.dp, color = MaterialTheme.colorScheme.onSurface, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Text(
