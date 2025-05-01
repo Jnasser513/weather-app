@@ -11,4 +11,11 @@
     <string name="velocity">%s %s</string>
     <string name="gusts">"Gusts: "</string>
     <string name="home">Home</string>
+    <string name="uv_index">UV Index</string>
+    <string name="prevent_hours">Use sun protection from %s to %s</string>
+    <string name="air_quality">Air Quality</string>
+    <string name="co">CO</string>
+    <string name="data_value">%.2f,  μg/m3</string>
+    <string name="no2">NO2</string>
+    <string name="o3">O3</string>
 </resources>

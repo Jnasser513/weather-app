@@ -73,7 +73,7 @@ fun WindContainer(
             Image(
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(0.3f),
+                    .alpha(0.2f),
                 painter = painterResource(R.drawable.map),
                 contentDescription = stringResource(R.string.map_image),
                 contentScale = ContentScale.FillBounds
@@ -82,7 +82,7 @@ fun WindContainer(
             WindFieldOverlay(
                 modifier = Modifier.fillMaxSize(),
                 streakCount = 100,
-                targetPoint = Offset(0.2f, 0.2f)
+                targetPoint = Offset(0.25f, 0.2f)
             )
 
             Box(

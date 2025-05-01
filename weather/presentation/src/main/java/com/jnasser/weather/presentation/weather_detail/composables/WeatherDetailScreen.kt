@@ -3,6 +3,7 @@ package com.jnasser.weather.presentation.weather_detail.composables
 import WeatherAppAnimatedSwipeableButton
 import WeatherAppSwipeableButton
 import android.widget.Space
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -35,8 +39,12 @@ import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailAction
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailState
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
+import com.jnasser.weather.presentation.weather_detail.composables.air_quality.AirQualityContainer
 import com.jnasser.weather.presentation.weather_detail.composables.forecast.ForecastContainer
+import com.jnasser.weather.presentation.weather_detail.composables.uv.UVContainer
 import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
+import com.jnasser.weather.presentation.weather_detail.model.AirQualityDataUi
+import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
 import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
 import org.koin.androidx.compose.koinViewModel
 
@@ -59,6 +67,8 @@ fun WeatherDetailScreen(
     state: WeatherDetailState,
     onAction: (WeatherDetailAction) -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     WeatherAppScaffold(topApBar = {
         WeatherTopAppBar(
             config = WeatherTopAppBarConfig(
@@ -105,6 +115,7 @@ fun WeatherDetailScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 20.dp)
+                .verticalScroll(scrollState)
         ) {
             val text = stringResource(
                 R.string.temperature_description,
@@ -132,6 +143,29 @@ fun WeatherDetailScreen(
                 windUnit = state.windUnit,
                 onAction = onAction
             )
+            Spacer(Modifier.height(10.dp))
+            Row(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                UVContainer(
+                    modifier = Modifier.weight(1f),
+                    uvDataUi = UVDataUi(
+                        uvValue = 1,
+                        state = "Low",
+                        preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
+                    )
+                )
+                Spacer(Modifier.width(15.dp))
+                AirQualityContainer(
+                    modifier = Modifier.weight(1f),
+                    airQualityDataUi = AirQualityDataUi(
+                        airQuality = 1,
+                        airCo = 201.94053649902344,
+                        airNO2 = 0.7711350917816162,
+                        o3 = 68.66455078125
+                    )
+                )
+            }
         }
     }
 }

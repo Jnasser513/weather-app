@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.jnasser.core.presentation.designsystem.components.WeatherAppLoading
+import com.jnasser.core.presentation.designsystem.components.WeatherContentWithProgress
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.core.presentation.designsystem.theme.WeatherGrey
 import com.jnasser.weather.presentation.weather_detail.model.ForecastDataUi
@@ -59,10 +60,17 @@ fun ForecastItem(
             text = forecastDataUi.title,
             style = MaterialTheme.typography.labelLarge
         )
-        WeatherIconWithProgress(
-            imageUrl = forecastDataUi.icon,
-            progress = forecastDataUi.progress
-        )
+        WeatherContentWithProgress(
+            progress = forecastDataUi.progress,
+            progressColors = listOf(Color(0xFF6BBD2D), Color(0xFFCE972A))
+        ) {
+            SubcomposeAsyncImage(
+                model = forecastDataUi.icon,
+                contentDescription = null,
+                error = {  },
+                loading = { WeatherAppLoading() }
+            )
+        }
         Row(
             modifier = Modifier
                 .padding(vertical = 10.dp)
@@ -77,47 +85,6 @@ fun ForecastItem(
                 style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
             )
         }
-    }
-}
-
-@Composable
-fun WeatherIconWithProgress(
-    modifier: Modifier = Modifier,
-    imageUrl: String? = null,
-    progress: Float
-) {
-    Box(
-        modifier = modifier.size(60.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(modifier = Modifier.matchParentSize()) {
-            drawArc(
-                color = WeatherGrey,
-                startAngle = -225f,
-                sweepAngle = 270f,
-                useCenter = false,
-                style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
-            )
-            drawArc(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color(0xFF6BBD2D),
-                        Color(0xFFCE972A)
-                    )
-                ),
-                startAngle = -225f,
-                sweepAngle = 270f * progress,
-                useCenter = false,
-                style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
-            )
-        }
-
-        SubcomposeAsyncImage(
-            model = imageUrl,
-            contentDescription = null,
-            error = {  },
-            loading = { WeatherAppLoading() }
-        )
     }
 }
 

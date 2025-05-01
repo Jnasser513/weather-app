@@ -43,7 +43,8 @@ val Typography = Typography(
         fontFamily = Inter,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 22.sp
+        lineHeight = 22.sp,
+        color = WeatherWhite
     ),
     bodyLarge = TextStyle(
         fontFamily = Inter,
@@ -56,6 +57,12 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 24.sp,
+        color = WeatherWhite
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp,
         color = WeatherWhite
     ),
     headlineMedium = TextStyle(

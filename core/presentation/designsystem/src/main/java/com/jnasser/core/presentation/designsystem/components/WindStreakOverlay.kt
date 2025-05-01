@@ -43,7 +43,7 @@ fun WindFieldOverlay(
         }
     }
 
-    // Calcula las animaciones de desplazamiento para cada streak
+    // Animaciones
     val animatedValues = streaks.mapIndexed { index, streak ->
         infiniteTransition.animateFloat(
             initialValue = 0f,
@@ -61,6 +61,8 @@ fun WindFieldOverlay(
         val canvasHeight = size.height
         val center = Offset(canvasWidth * targetPoint.x, canvasHeight * targetPoint.y)
 
+        val visibleFraction = 0.3f // Muestra solo la última parte del recorrido
+
         streaks.forEachIndexed { index, streak ->
             val progress = animatedValues[index]
 
@@ -69,32 +71,38 @@ fun WindFieldOverlay(
                 y = canvasHeight * streak.start.y
             )
 
-            val current = Offset(
-                x = lerp(start.x, center.x, progress),
-                y = lerp(start.y, center.y, progress)
+            val startLerp = (progress - visibleFraction).coerceIn(0f, 1f)
+            val endLerp = progress.coerceIn(0f, 1f)
+
+            val currentStart = Offset(
+                x = lerp(start.x, center.x, startLerp),
+                y = lerp(start.y, center.y, startLerp)
+            )
+            val currentEnd = Offset(
+                x = lerp(start.x, center.x, endLerp),
+                y = lerp(start.y, center.y, endLerp)
             )
 
             val path = Path().apply {
-                moveTo(start.x, start.y)
+                moveTo(currentStart.x, currentStart.y)
                 quadraticTo(
-                    (start.x + center.x) / 2,
-                    (start.y + center.y) / 2 + 20f,
-                    current.x,
-                    current.y
+                    (currentStart.x + currentEnd.x) / 2,
+                    (currentStart.y + currentEnd.y) / 2 + 10f,
+                    currentEnd.x,
+                    currentEnd.y
                 )
             }
 
             drawPath(
                 path,
                 color = color,
-                style = Stroke(width = 3f, cap = StrokeCap.Round)
+                style = Stroke(width = 1.5f, cap = StrokeCap.Round)
             )
         }
     }
 }
 
 data class WindStreak(val start: Offset, val speed: Int)
-
 
 @Preview
 @Composable
