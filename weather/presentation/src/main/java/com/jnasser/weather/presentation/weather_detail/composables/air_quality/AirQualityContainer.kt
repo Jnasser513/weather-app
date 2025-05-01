@@ -37,7 +37,7 @@ fun AirQualityContainer(
         DataWithProgress(
             colors = listOf(Color(0xFF6BBD2D), Color(0xFF6BBD2D)),
             title = stringResource(R.string.air_quality),
-            value = airQualityDataUi.airQuality,
+            value = (((5f - airQualityDataUi.airQuality) / 4f) * 100f).coerceIn(0f, 100f).roundToInt(),
             progress = ((5f - airQualityDataUi.airQuality) / 4f).coerceIn(0f, 1f)
         )
         // CO
@@ -45,11 +45,11 @@ fun AirQualityContainer(
             colors = listOf(Color(0xFF6BBD2D), Color(0xFF6BBD2D)),
             title = stringResource(R.string.co),
             description = stringResource(R.string.data_value, airQualityDataUi.airCo),
-            value = ceil(((15400f - airQualityDataUi.airCo) / 15400f).coerceIn(0.0, 1.0)).roundToInt(),
-            progress = (airQualityDataUi.airCo.toFloat() / 15400f).coerceIn(0f, 1f)
+            value = (((15400f - airQualityDataUi.airCo) / 15400f) * 100f).coerceIn(0.0, 100.0).roundToInt(),
+            progress = ((15400f - airQualityDataUi.airCo) / 15400f).coerceIn(0.0, 1.0).toFloat()
         )
         HorizontalDivider(
-            modifier = Modifier.padding(vertical = 5.dp),
+            modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp),
             thickness = 1.dp,
             color = WeatherGrey
         )
@@ -58,11 +58,11 @@ fun AirQualityContainer(
             colors = listOf(Color(0xFF6BBD2D), Color(0xFF6BBD2D)),
             title = stringResource(R.string.no2),
             description = stringResource(R.string.data_value, airQualityDataUi.airNO2),
-            value = ceil(((200f - airQualityDataUi.airNO2) / 200f).coerceIn(0.0, 1.0)).roundToInt(),
-            progress = (airQualityDataUi.airNO2.toFloat() / 200f).coerceIn(0f, 1f)
+            value = (((200f - airQualityDataUi.airNO2) / 200f) * 100f).coerceIn(0.0, 100.0).roundToInt(),
+            progress = ((200f - airQualityDataUi.airNO2) / 200f).coerceIn(0.0, 1.0).toFloat()
         )
         HorizontalDivider(
-            modifier = Modifier.padding(vertical = 5.dp),
+            modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp),
             thickness = 1.dp,
             color = WeatherGrey
         )
@@ -71,8 +71,8 @@ fun AirQualityContainer(
             colors = listOf(Color(0xFF6BBD2D), Color(0xFF6BBD2D)),
             title = stringResource(R.string.o3),
             description = stringResource(R.string.data_value, airQualityDataUi.o3),
-            value = ceil(((180 - airQualityDataUi.o3) / 180f).coerceIn(0.0, 1.0)).roundToInt(),
-            progress = (airQualityDataUi.o3.toFloat() / 180f).coerceIn(0f, 1f)
+            value = (((180f - airQualityDataUi.o3) / 180f) * 100f).coerceIn(0.0, 100.0).roundToInt(),
+            progress = ((180f - airQualityDataUi.o3) / 180f).coerceIn(0.0, 1.0).toFloat()
         )
     }
 }
