@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.jnasser.core.presentation.designsystem.components
 
 import androidx.compose.foundation.background
@@ -18,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +39,8 @@ data class WeatherTopAppBarConfig(
     val navigationIcon: WeatherTopAppBar.NavigationIcon?,
     val actions: List<WeatherTopAppBar.Action> = emptyList(),
     val centerTitle: Boolean = false,
-    val color: Color? = null
+    val color: Color? = null,
+    val scrollBehavior: TopAppBarScrollBehavior? = null
 )
 
 object WeatherTopAppBar {
@@ -89,7 +94,8 @@ fun WeatherTopAppBar(
                 textAlign = if (config.centerTitle) TextAlign.Center else null
             )
         },colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent
+            containerColor = Color.Transparent,
+            scrolledContainerColor = Color.Transparent
         ),
         navigationIcon = {
             when (config.navigationIcon) {
@@ -147,6 +153,7 @@ fun WeatherTopAppBar(
                 }
             }
         },
+        scrollBehavior = config.scrollBehavior
     )
 }
 

@@ -2,7 +2,7 @@
 <resources>
     <string name="saved_cities">Ciudades guardadas</string>
     <string name="map">Map</string>
-    <string name="temperature_description">Its currently %s and %s outside.\nFeel like %s</string>
+    <string name="temperature_description">Its currently %s and %s outside. Feel like %s</string>
     <string name="daily">Daily</string>
     <string name="hourly">Hourly</string>
     <string name="forecast">Forescast</string>
@@ -15,7 +15,7 @@
     <string name="prevent_hours">Use sun protection from %s to %s</string>
     <string name="air_quality">Air Quality</string>
     <string name="co">CO</string>
-    <string name="data_value">%.2f,  μg/m3</string>
+    <string name="data_value">%.2f  μg/m3</string>
     <string name="no2">NO2</string>
     <string name="o3">O3</string>
 </resources>

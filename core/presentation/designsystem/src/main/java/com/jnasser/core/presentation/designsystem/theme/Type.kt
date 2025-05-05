@@ -50,7 +50,7 @@ val Typography = Typography(
         fontFamily = Inter,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp
+        lineHeight = 24.sp,
     ),
     labelLarge = TextStyle(
         fontFamily = Inter,
@@ -63,18 +63,21 @@ val Typography = Typography(
         fontFamily = Inter,
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
-        color = WeatherWhite
+        color = WeatherWhite,
+        lineHeight = 20.sp
     ),
     headlineMedium = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp,
-        color = WeatherWhite
+        color = WeatherWhite,
+        lineHeight = 5.sp
     ),
     headlineLarge = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.SemiBold,
         fontSize = 32.sp,
-        color = WeatherGrey
+        color = WeatherGrey,
+        lineHeight = 20.sp
     )
 )

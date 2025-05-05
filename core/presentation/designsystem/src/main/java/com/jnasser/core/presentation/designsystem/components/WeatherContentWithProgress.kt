@@ -1,9 +1,11 @@
 package com.jnasser.core.presentation.designsystem.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -27,6 +29,10 @@ fun WeatherContentWithProgress(
         modifier = modifier.size(60.dp),
         contentAlignment = Alignment.Center
     ) {
+        val progressAnimated by animateFloatAsState(
+            targetValue = progress
+        )
+
         Canvas(modifier = Modifier.matchParentSize()) {
             val strokeWidth = 4.dp.toPx()
             val radius = size.minDimension / 2
@@ -55,7 +61,7 @@ fun WeatherContentWithProgress(
                     end = endOffset
                 ),
                 startAngle = startAngle,
-                sweepAngle = sweepAngle * progress,
+                sweepAngle = sweepAngle * progressAnimated,
                 useCenter = false,
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
