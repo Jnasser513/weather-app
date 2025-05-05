@@ -1,8 +1,13 @@
+@file:OptIn(ExperimentalLayoutApi::class)
+
 package com.jnasser.core.presentation.designsystem.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -67,10 +72,10 @@ fun AnimatedText(
     modifier: Modifier = Modifier,
     text: String,
     highlightWordPositions: List<Int> = emptyList(),
-    highlightColor: Color = MaterialTheme.colorScheme.primary,
-    defaultColor: Color = MaterialTheme.colorScheme.onSurface,
-    textStyle: TextStyle = LocalTextStyle.current,
-    delayPerWord: Long = 300L
+    highlightColor: Color = MaterialTheme.colorScheme.onSurface,
+    defaultColor: Color = MaterialTheme.colorScheme.surface,
+    textStyle: TextStyle = MaterialTheme.typography.headlineMedium,
+    delayPerWord: Long = 100L
 ) {
     val wordsWithSpaces = remember(text) {
         // Regex para dividir y conservar los espacios
@@ -89,14 +94,17 @@ fun AnimatedText(
         }
     }
 
-    Row(modifier = modifier) {
+    FlowRow(
+        modifier = modifier
+    ) {
         wordsWithSpaces.forEachIndexed { index, word ->
             val isHighlighted = index in highlightWordPositions
             val color = if (isHighlighted) highlightColor else defaultColor
 
             AnimatedVisibility(
                 visible = visibleStates.getOrNull(index) == true,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
+                enter = fadeIn(animationSpec = tween(500)) +
+                        slideInVertically(initialOffsetY = { it / 2 }, animationSpec = tween(500))
             ) {
                 Text(
                     text = word,

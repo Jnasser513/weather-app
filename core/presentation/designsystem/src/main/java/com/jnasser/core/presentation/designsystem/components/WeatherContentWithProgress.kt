@@ -1,9 +1,16 @@
 package com.jnasser.core.presentation.designsystem.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -19,10 +26,23 @@ import kotlin.math.sin
 @Composable
 fun WeatherContentWithProgress(
     modifier: Modifier = Modifier,
-    progress: Float,
+    progress: Float, // e.g., 0.8f
     progressColors: List<Color>,
     content: @Composable () -> Unit
 ) {
+    val animatedProgress = remember { Animatable(0f) }
+
+    LaunchedEffect(Unit) {
+        animatedProgress.snapTo(0f)
+        animatedProgress.animateTo(
+            targetValue = progress,
+            animationSpec = tween(
+                durationMillis = 1000,
+                easing = FastOutSlowInEasing
+            )
+        )
+    }
+
     Box(
         modifier = modifier.size(60.dp),
         contentAlignment = Alignment.Center
@@ -43,19 +63,17 @@ fun WeatherContentWithProgress(
                 startAngle = startAngle,
                 sweepAngle = sweepAngle,
                 useCenter = false,
-                style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
-            val startOffset = polarToCartesian(center, radius, startRadians)
-            val endOffset = polarToCartesian(center, radius, endRadians)
 
             drawArc(
                 brush = Brush.linearGradient(
                     colors = progressColors,
-                    start = startOffset,
-                    end = endOffset
+                    start = polarToCartesian(center, radius, startRadians),
+                    end = polarToCartesian(center, radius, endRadians)
                 ),
                 startAngle = startAngle,
-                sweepAngle = sweepAngle * progress,
+                sweepAngle = sweepAngle * animatedProgress.value,
                 useCenter = false,
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
@@ -64,6 +82,7 @@ fun WeatherContentWithProgress(
         content()
     }
 }
+
 
 fun polarToCartesian(center: Offset, radius: Float, angleRad: Double): Offset {
     return Offset(

@@ -1,29 +1,26 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.jnasser.weather.presentation.weather_detail.composables
 
 import WeatherAppAnimatedSwipeableButton
-import WeatherAppSwipeableButton
-import android.widget.Space
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -31,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.domain.city.CityDetail
 import com.jnasser.core.domain.city.Weather
+import com.jnasser.core.presentation.designsystem.components.AnimatedText
+import com.jnasser.core.presentation.designsystem.components.animations.SequentialAnimatedItems
 import com.jnasser.core.presentation.designsystem.components.WeatherAppScaffold
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBar
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBarConfig
@@ -64,109 +63,149 @@ fun WeatherDetailScreenRoot(
 
 @Composable
 fun WeatherDetailScreen(
-    state: WeatherDetailState,
-    onAction: (WeatherDetailAction) -> Unit
+    state: WeatherDetailState, onAction: (WeatherDetailAction) -> Unit
 ) {
-    val scrollState = rememberScrollState()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    WeatherAppScaffold(topApBar = {
-        WeatherTopAppBar(
-            config = WeatherTopAppBarConfig(
-                title = state.city.name,
-                centerTitle = true,
-                navigationIcon = WeatherTopAppBar.NavigationIcon.Custom(
-                    icon = Icons.Outlined.Home,
-                    click = {
+    var showFab by remember { mutableStateOf(false) }
 
-                    }),
-                actions = listOf(
-                    WeatherTopAppBar.Action(text = stringResource(R.string.map),
-                        icon = com.jnasser.core.presentation.designsystem.theme.Icons.Map,
-                        onClick = {
+    WeatherAppScaffold(
+        topApBar = {
+            WeatherTopAppBar(
+                config = WeatherTopAppBarConfig(
+                    title = state.city.name,
+                    centerTitle = true,
+                    navigationIcon = WeatherTopAppBar.NavigationIcon.Custom(icon = Icons.Outlined.Home,
+                        click = {
 
-                        })
+                        }),
+                    actions = listOf(
+                        WeatherTopAppBar.Action(text = stringResource(R.string.map),
+                            icon = com.jnasser.core.presentation.designsystem.theme.Icons.Map,
+                            onClick = {
+
+                            })
+                    ),
+
+                    scrollBehavior = scrollBehavior
                 )
             )
-        )
-    }, floatingActionButton = {
-        WeatherAppAnimatedSwipeableButton(
-            buttonText = stringResource(com.jnasser.core.presentation.designsystem.R.string.follow_up),
-            buttonTextAlternative = stringResource(com.jnasser.core.presentation.designsystem.R.string.unfollow_up),
-            draggableIconActive = {
-                Icon(
-                    imageVector = Icons.Filled.Favorite,
-                    contentDescription = null,
-                    tint = Color(0x6641588A)
-                )
-            },
-            draggableIconInactive = {
-                Icon(
-                    imageVector = Icons.Filled.FavoriteBorder,
-                    contentDescription = null,
-                    tint = Color(0x6641588A)
-                )
-            }
-        ) {
+        },
+        scrollBehavior = scrollBehavior,
+        floatingActionButton = {
+            if(showFab) {
+                WeatherAppAnimatedSwipeableButton(buttonText = stringResource(com.jnasser.core.presentation.designsystem.R.string.follow_up),
+                    buttonTextAlternative = stringResource(com.jnasser.core.presentation.designsystem.R.string.unfollow_up),
+                    draggableIconActive = {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = null,
+                            tint = Color(0x6641588A)
+                        )
+                    },
+                    draggableIconInactive = {
+                        Icon(
+                            imageVector = Icons.Filled.FavoriteBorder,
+                            contentDescription = null,
+                            tint = Color(0x6641588A)
+                        )
+                    }) {
 
-        }
-    }) { padding ->
-        Column(
+                }
+            }
+        }) { padding ->
+        SequentialAnimatedItems(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 20.dp)
-                .verticalScroll(scrollState)
-        ) {
-            val text = stringResource(
-                R.string.temperature_description,
-                state.city.temperature,
-                state.city.weather.description,
-                state.city.temperatureFeels
-            )/*AnimatedText(
-                text = text,
-                highlightWordPositions = listOf(0,1, 4,6,7)
-            )*/
-            Text(
-                text = text,
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Spacer(Modifier.height(40.dp))
-            ForecastContainer()
-            Spacer(Modifier.height(30.dp))
-            WindContainer(
-                windDataUi = WindDataUi(
-                    "Gentle Breeze",
-                    "ESE",
-                    "9",
-                    "14"
-                ),
-                windUnit = state.windUnit,
-                onAction = onAction
-            )
-            Spacer(Modifier.height(10.dp))
-            Row(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                UVContainer(
-                    modifier = Modifier.weight(1f),
-                    uvDataUi = UVDataUi(
-                        uvValue = 1,
-                        state = "Low",
-                        preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
+                .padding(padding),
+            items = listOf(
+                {
+                    val text = stringResource(
+                        R.string.temperature_description,
+                        state.city.temperature,
+                        state.city.weather.description,
+                        state.city.temperatureFeels
                     )
-                )
-                Spacer(Modifier.width(15.dp))
-                AirQualityContainer(
-                    modifier = Modifier.weight(1f),
-                    airQualityDataUi = AirQualityDataUi(
-                        airQuality = 1,
-                        airCo = 201.94053649902344,
-                        airNO2 = 0.7711350917816162,
-                        o3 = 68.66455078125
+                    AnimatedText(
+                        text = text,
+                        highlightWordPositions = listOf(2, 4, 5)
                     )
-                )
+                    Spacer(Modifier.height(40.dp))
+                },
+                {
+                    ForecastContainer()
+                    Spacer(Modifier.height(30.dp))
+                },
+                {
+                    WindContainer(
+                        windDataUi = WindDataUi(
+                            "Gentle Breeze", "ESE", "9", "14"
+                        ), windUnit = state.windUnit, onAction = onAction
+                    )
+                    Spacer(Modifier.height(10.dp))
+                },
+                {
+                    ExtraDataComponents()
+                }
+            ),
+            onSequenceEnd = {
+                showFab = true
             }
-        }
+        )
+        /*LazyColumn(
+            contentPadding = PaddingValues(20.dp)
+        ) {
+            item {
+                val text = stringResource(
+                    R.string.temperature_description,
+                    state.city.temperature,
+                    state.city.weather.description,
+                    state.city.temperatureFeels
+                )
+                AnimatedText(
+                    text = text,
+                    highlightWordPositions = listOf(2, 4, 5)
+                )
+                Spacer(Modifier.height(40.dp))
+            }
+
+            item {
+                ForecastContainer()
+                Spacer(Modifier.height(30.dp))
+            }
+
+            *//*item {
+                WindContainer(
+                    windDataUi = WindDataUi(
+                        "Gentle Breeze", "ESE", "9", "14"
+                    ), windUnit = state.windUnit, onAction = onAction
+                )
+                Spacer(Modifier.height(10.dp))
+            }
+
+            item {
+                Row(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    UVContainer(
+                        modifier = Modifier.weight(1f), uvDataUi = UVDataUi(
+                            uvValue = 1,
+                            state = "Low",
+                            preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
+                        )
+                    )
+                    Spacer(Modifier.width(15.dp))
+                    AirQualityContainer(
+                        modifier = Modifier.weight(1f), airQualityDataUi = AirQualityDataUi(
+                            airQuality = 1,
+                            airCo = 201.94053649902344,
+                            airNO2 = 0.7711350917816162,
+                            o3 = 68.66455078125
+                        )
+                    )
+                }
+            }*//*
+        }*/
     }
 }
 

@@ -12,13 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jnasser.core.presentation.designsystem.components.WeatherContentWithProgress
 import com.jnasser.core.presentation.designsystem.theme.WeatherGrey
-import com.jnasser.weather.presentation.R
 
 @Composable
 fun DataWithProgress(
@@ -30,7 +28,7 @@ fun DataWithProgress(
     progress: Float
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp, vertical = 15.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
