@@ -74,7 +74,7 @@ fun WindContainer(
         visible = visible,
         transition = fadeIn(
             animationSpec = tween(
-                durationMillis = 300,
+                durationMillis = 500,
                 easing = FastOutSlowInEasing
             )
         ) + scaleIn(

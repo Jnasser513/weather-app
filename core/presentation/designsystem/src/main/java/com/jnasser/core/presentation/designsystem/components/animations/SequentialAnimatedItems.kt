@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SequentialAnimatedItems(
     modifier: Modifier = Modifier,
-    items: List<@Composable () -> Unit>
+    items: List<@Composable () -> Unit>,
+    onSequenceEnd: () -> Unit
 ) {
     var currentIndex by remember { mutableIntStateOf(0) }
 
@@ -29,7 +30,10 @@ fun SequentialAnimatedItems(
                     AnimatedItemWrapper(
                         index = index,
                         onAnimationEnd = {
-                            if(index == currentIndex) currentIndex++
+                            if(index == currentIndex) {
+                                currentIndex++
+                                if(index == items.lastIndex) onSequenceEnd()
+                            }
                         }
                     ) { itemContent() }
                 }

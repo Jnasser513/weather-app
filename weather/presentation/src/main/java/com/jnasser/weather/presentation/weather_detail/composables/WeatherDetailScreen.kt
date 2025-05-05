@@ -3,34 +3,24 @@
 package com.jnasser.weather.presentation.weather_detail.composables
 
 import WeatherAppAnimatedSwipeableButton
-import WeatherAppSwipeableButton
-import android.widget.Space
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -39,8 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.jnasser.core.domain.city.CityDetail
 import com.jnasser.core.domain.city.Weather
 import com.jnasser.core.presentation.designsystem.components.AnimatedText
-import com.jnasser.core.presentation.designsystem.components.AnimatedTypewriterText
-import com.jnasser.core.presentation.designsystem.components.SequentialAnimatedItems
+import com.jnasser.core.presentation.designsystem.components.animations.SequentialAnimatedItems
 import com.jnasser.core.presentation.designsystem.components.WeatherAppScaffold
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBar
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBarConfig
@@ -56,7 +45,6 @@ import com.jnasser.weather.presentation.weather_detail.composables.wind.WindCont
 import com.jnasser.weather.presentation.weather_detail.model.AirQualityDataUi
 import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
 import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
-import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -78,6 +66,8 @@ fun WeatherDetailScreen(
     state: WeatherDetailState, onAction: (WeatherDetailAction) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    var showFab by remember { mutableStateOf(false) }
 
     WeatherAppScaffold(
         topApBar = {
@@ -103,23 +93,25 @@ fun WeatherDetailScreen(
         },
         scrollBehavior = scrollBehavior,
         floatingActionButton = {
-            WeatherAppAnimatedSwipeableButton(buttonText = stringResource(com.jnasser.core.presentation.designsystem.R.string.follow_up),
-                buttonTextAlternative = stringResource(com.jnasser.core.presentation.designsystem.R.string.unfollow_up),
-                draggableIconActive = {
-                    Icon(
-                        imageVector = Icons.Filled.Favorite,
-                        contentDescription = null,
-                        tint = Color(0x6641588A)
-                    )
-                },
-                draggableIconInactive = {
-                    Icon(
-                        imageVector = Icons.Filled.FavoriteBorder,
-                        contentDescription = null,
-                        tint = Color(0x6641588A)
-                    )
-                }) {
+            if(showFab) {
+                WeatherAppAnimatedSwipeableButton(buttonText = stringResource(com.jnasser.core.presentation.designsystem.R.string.follow_up),
+                    buttonTextAlternative = stringResource(com.jnasser.core.presentation.designsystem.R.string.unfollow_up),
+                    draggableIconActive = {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = null,
+                            tint = Color(0x6641588A)
+                        )
+                    },
+                    draggableIconInactive = {
+                        Icon(
+                            imageVector = Icons.Filled.FavoriteBorder,
+                            contentDescription = null,
+                            tint = Color(0x6641588A)
+                        )
+                    }) {
 
+                }
             }
         }) { padding ->
         SequentialAnimatedItems(
@@ -153,28 +145,12 @@ fun WeatherDetailScreen(
                     Spacer(Modifier.height(10.dp))
                 },
                 {
-                    Row(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        UVContainer(
-                            modifier = Modifier.weight(1f), uvDataUi = UVDataUi(
-                                uvValue = 1,
-                                state = "Low",
-                                preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
-                            )
-                        )
-                        Spacer(Modifier.width(15.dp))
-                        AirQualityContainer(
-                            modifier = Modifier.weight(1f), airQualityDataUi = AirQualityDataUi(
-                                airQuality = 1,
-                                airCo = 201.94053649902344,
-                                airNO2 = 0.7711350917816162,
-                                o3 = 68.66455078125
-                            )
-                        )
-                    }
+                    ExtraDataComponents()
                 }
-            )
+            ),
+            onSequenceEnd = {
+                showFab = true
+            }
         )
         /*LazyColumn(
             contentPadding = PaddingValues(20.dp)
