@@ -1,0 +1,25 @@
+package com.jnasser.core.domain.weather_detail.model
+
+data class WeatherDailyDetail(
+    val dt: Long,
+    val sunrise: Long,
+    val sunset: Long,
+    val moonrise: Long,
+    val moonset: Long,
+    val moonPhase: Float,
+    val summary: String,
+    val temp: Temperature,
+    val feelsLike: Temperature,
+    val pressure: Int,
+    val humidity: Int,
+    val uvi: Float,
+    val clouds: Int,
+    val visibility: Int,
+    val windSpeed: Float,
+    val windDeg: Int,
+    val windGust: Float,
+    val weather: Weather,
+    val rain: Float,
+    val snow: Float,
+    val pop: Int,
+)
