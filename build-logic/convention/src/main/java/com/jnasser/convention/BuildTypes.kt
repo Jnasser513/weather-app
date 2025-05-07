@@ -49,14 +49,16 @@ internal fun Project.configureBuildTypes(
 }
 
 private fun BuildType.configureDebugBuildType(apiKey: String) {
-    //TODO("Add configuration variables")
+    buildConfigField("String", "API_KEY", "\"$apiKey\"")
+    buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/data/3.0/onecall\"")
 }
 
 private fun BuildType.configureReleaseBuildType(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
     apiKey: String
 ) {
-    //TODO("Add configuration variables")
+    buildConfigField("String", "API_KEY", "\"$apiKey\"")
+    buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/data/3.0/onecall\"")
 
     isMinifyEnabled = true
     proguardFiles(
