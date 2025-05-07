@@ -1,9 +1,7 @@
-package com.jnasser.core.data.networking
+package com.jnasser.core.data.weather_detail.networking
 
 import com.jnasser.core.data.BuildConfig
-import com.jnasser.core.domain.util.AuthInfo
-import com.jnasser.core.domain.util.Result
-import com.jnasser.core.domain.util.SessionStorage
+import com.jnasser.core.data.weather_detail.networking.post
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.auth.Auth
@@ -21,9 +19,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import timber.log.Timber
 
-class HttpClientFactory(
-    private val sessionStorage: SessionStorage
-) {
+class HttpClientFactory {
 
     fun build(): HttpClient {
         return HttpClient(CIO) {
@@ -44,47 +40,6 @@ class HttpClientFactory(
             }
             defaultRequest {
                 contentType(ContentType.Application.Json)
-                header("x-api-key", BuildConfig.API_KEY)
-            }
-            install(Auth) {
-                bearer {
-                    loadTokens {
-                        val info = sessionStorage.get()
-                        BearerTokens(
-                            accessToken = info?.accessToken ?: "",
-                            refreshToken = info?.refreshToken ?: ""
-                        )
-                    }
-                    refreshTokens {
-                        val info = sessionStorage.get()
-                        val response = client.post<AccessTokenRequest, AccessTokenResponse>(
-                            route = "/accessToken",
-                            body = AccessTokenRequest(
-                                refreshToken = info?.refreshToken ?: "",
-                                userId = info?.userId ?: ""
-                            )
-                        )
-
-                        if(response is Result.Success) {
-                            val newAuthInfo = AuthInfo(
-                                accessToken = response.data.accessToken,
-                                refreshToken = info?.refreshToken ?: "",
-                                userId = info?.userId ?: ""
-                            )
-                            sessionStorage.set(newAuthInfo)
-
-                            BearerTokens(
-                                accessToken = newAuthInfo.accessToken,
-                                refreshToken = newAuthInfo.refreshToken
-                            )
-                        } else {
-                            BearerTokens(
-                                accessToken = "",
-                                refreshToken = ""
-                            )
-                        }
-                    }
-                }
             }
         }
     }

@@ -1,8 +1,8 @@
-package com.jnasser.core.data.networking
+package com.jnasser.core.data.weather_detail.networking
 
+import android.provider.ContactsContract.Data
 import com.jnasser.core.data.BuildConfig
-import com.jnasser.core.domain.util.DataError
-import com.jnasser.core.domain.util.Result
+import com.jnasser.core.domain.util.error_handler.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -15,9 +15,10 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
+import com.jnasser.core.domain.util.result_handler.Result
 
 suspend inline fun <reified Response: Any> HttpClient.get(
-    route: String,
+    route: String? = null,
     queryParameters: Map<String, Any?> = mapOf()
 ): Result<Response, DataError.Network> {
     return safeCall {
@@ -38,20 +39,6 @@ suspend inline fun <reified Request, reified Response: Any> HttpClient.post(
         post {
             url(constructRoute(route))
             setBody(body)
-        }
-    }
-}
-
-suspend inline fun <reified Response: Any> HttpClient.delete(
-    route: String,
-    queryParameters: Map<String, Any?> = mapOf()
-): Result<Response, DataError.Network> {
-    return safeCall {
-        delete {
-            url(constructRoute(route))
-            queryParameters.forEach { (key, value) ->
-                parameter(key, value)
-            }
         }
     }
 }
@@ -78,9 +65,8 @@ suspend inline fun <reified T> responseToResult(response: HttpResponse): Result<
     return when(response.status.value) {
         in 200..299 -> Result.Success(response.body<T>())
         401 -> Result.Error(DataError.Network.UNAUTHORIZED)
+        404 -> Result.Error(DataError.Network.NOT_FOUND)
         408 -> Result.Error(DataError.Network.REQUEST_TIMEOUT)
-        409 -> Result.Error(DataError.Network.CONFLICT)
-        413 -> Result.Error(DataError.Network.PAYLOAD_TOO_LARGE)
         429 -> Result.Error(DataError.Network.TOO_MANY_REQUEST)
         in 500..599 -> Result.Error(DataError.Network.SERVER_ERROR)
         else -> Result.Error(DataError.Network.UNKNOWN)
