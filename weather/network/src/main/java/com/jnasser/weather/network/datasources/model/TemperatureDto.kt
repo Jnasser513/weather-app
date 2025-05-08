@@ -1,6 +1,9 @@
-package com.jnasser.core.domain.weather.model
+package com.jnasser.weather.network.datasources.model
 
-data class Temperature(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class TemperatureDto(
     val day: Float,
     val min: Float,
     val max: Float,

@@ -1,10 +1,13 @@
-package com.jnasser.core.domain.weather.model
+package com.jnasser.weather.network.datasources.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class WeatherDetail(
+@Serializable
+data class WeatherDetailDto(
     val lat: Double,
     val lon: Double,
-    val current: WeatherCurrentDetail,
-    val hourly: WeatherHourlyDetail,
-    val daily: WeatherDailyDetail
+    val current: WeatherCurrentDetailDto,
+    val hourly: WeatherHourlyDetailDto,
+    val daily: WeatherDailyDetailDto
 )

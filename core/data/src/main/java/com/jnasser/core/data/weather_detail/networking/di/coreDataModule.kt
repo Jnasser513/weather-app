@@ -5,5 +5,5 @@ import com.jnasser.core.domain.coroutines.DispatcherProvider
 import org.koin.dsl.module
 
 val coreDataModule = module {
-    single<DispatcherProvider> { DispatcherProviderImpl() }
+    single<DispatcherProvider> { DispatcherProviderImpl() }g
 }

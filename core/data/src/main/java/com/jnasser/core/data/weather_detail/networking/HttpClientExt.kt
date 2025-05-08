@@ -1,11 +1,9 @@
 package com.jnasser.core.data.weather_detail.networking
 
-import android.provider.ContactsContract.Data
 import com.jnasser.core.data.BuildConfig
 import com.jnasser.core.domain.util.error_handler.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -23,7 +21,7 @@ suspend inline fun <reified Response: Any> HttpClient.get(
 ): Result<Response, DataError.Network> {
     return safeCall {
         get {
-            url(constructRoute(route))
+            url(constructRoute(route ?: BuildConfig.BASE_URL))
             queryParameters.forEach { (key, value) ->
                 parameter(key, value)
             }

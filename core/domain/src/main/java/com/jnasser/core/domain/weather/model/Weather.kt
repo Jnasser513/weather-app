@@ -1,4 +1,4 @@
-package com.jnasser.core.domain.weather_detail.model
+package com.jnasser.core.domain.weather.model
 
 data class Weather(
     val id: Int,

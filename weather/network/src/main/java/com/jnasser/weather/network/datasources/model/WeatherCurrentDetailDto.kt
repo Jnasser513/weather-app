@@ -1,18 +1,22 @@
-package com.jnasser.core.domain.weather.model
+package com.jnasser.weather.network.datasources.model
 
-data class WeatherCurrentDetail(
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class WeatherCurrentDetailDto(
     val sunrise: Long,
     val sunset: Long,
     val temp: Float,
-    val feelsLike: Float,
+    @SerialName(value = "feels_like") val feelsLike: Float,
     val pressure: Int,
     val humidity: Int,
     val uvi: Float,
     val clouds: Int,
     val visibility: Int,
-    val windSpeed: Float,
-    val windDeg: Int,
-    val weather: Weather,
-    val rain: Rain,
-    val snow: Snow
+    @SerialName(value = "wind_speed") val windSpeed: Float,
+    @SerialName(value = "wind_deg") val windDeg: Int,
+    val weather: WeatherDto,
+    val rain: RainDto,
+    val snow: SnowDto
 )

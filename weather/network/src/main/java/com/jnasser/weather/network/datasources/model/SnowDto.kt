@@ -1,5 +1,9 @@
-package com.jnasser.core.domain.weather.model
+package com.jnasser.weather.network.datasources.model
 
-data class Snow(
-    val `1h`: Float
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class SnowDto(
+    @SerialName(value = "1h") val value: Float
 )

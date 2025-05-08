@@ -1,6 +1,10 @@
-package com.jnasser.core.domain.weather.model
+package com.jnasser.weather.network.datasources.model
 
-data class Weather(
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class WeatherDto(
     val id: Int,
     val main: String,
     val description: String,

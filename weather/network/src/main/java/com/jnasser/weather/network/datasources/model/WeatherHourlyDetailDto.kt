@@ -1,19 +1,23 @@
-package com.jnasser.core.domain.weather.model
+package com.jnasser.weather.network.datasources.model
 
-data class WeatherHourlyDetail(
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class WeatherHourlyDetailDto(
     val dt: Long,
     val temp: Float,
-    val feelsLike: Float,
+    @SerialName(value = "feels_like") val feelsLike: Float,
     val pressure: Int,
     val humidity: Int,
     val uvi: Float,
     val clouds: Int,
     val visibility: Int,
-    val windSpeed: Float,
-    val windDeg: Int,
-    val windGust: Float,
-    val weather: Weather,
-    val rain: Rain,
-    val snow: Snow,
+    @SerialName(value = "wind_spedd") val windSpeed: Float,
+    @SerialName(value = "wind_deg") val windDeg: Int,
+    @SerialName(value = "wind_gust") val windGust: Float,
+    val weather: WeatherDto,
+    val rain: RainDto,
+    val snow: SnowDto,
     val pop: Float
 )
