@@ -13,7 +13,7 @@ object DateUtils {
             .atZone(ZoneId.systemDefault())
             .dayOfWeek
 
-        return date.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        return date.getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
     }
 
     fun isToday(timeStampSeconds: Long): Boolean {

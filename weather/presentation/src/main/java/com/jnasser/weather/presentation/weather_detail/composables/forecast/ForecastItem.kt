@@ -84,7 +84,7 @@ fun ForecastItem(
             )
             Spacer(Modifier.width(3.dp))
             Text(
-                text = forecastDataUi.maxTemperature.toInt().toString(),
+                text = forecastDataUi.maxTemperature,
                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
                 color = MaterialTheme.colorScheme.onSurface
             )

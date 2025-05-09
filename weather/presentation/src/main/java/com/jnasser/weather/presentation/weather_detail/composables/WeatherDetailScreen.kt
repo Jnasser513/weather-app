@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.domain.city.CityDetail
-import com.jnasser.core.domain.city.Weather
 import com.jnasser.core.domain.weather.model.WeatherDetail
 import com.jnasser.core.presentation.designsystem.components.AnimatedText
 import com.jnasser.core.presentation.designsystem.components.animations.SequentialAnimatedItems
@@ -118,9 +117,9 @@ fun WeatherDetailScreen(
                 {
                     val text = stringResource(
                         R.string.temperature_description,
-                        state.weather.current?.temp.toString(),
+                        "${state.weather.current?.temp}${state.temperatureUnits.symbol}",
                         state.weather.current?.weather?.getOrNull(0)?.main.orEmpty(),
-                        state.weather.current?.feelsLike.toString()
+                        "${state.weather.current?.feelsLike}${state.temperatureUnits.symbol}"
                     )
                     AnimatedText(
                         text = text,
@@ -130,7 +129,7 @@ fun WeatherDetailScreen(
                 },
                 {
                     ForecastContainer(
-                        forecastList = state.weather.daily?.map { it.toForecastDataUi() }.orEmpty()
+                        forecastList = state.weather.daily?.map { it.toForecastDataUi(state.temperatureUnits.symbol) }.orEmpty()
                     )
                     Spacer(Modifier.height(30.dp))
                 },
