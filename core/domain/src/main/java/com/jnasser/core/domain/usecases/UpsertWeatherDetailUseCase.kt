@@ -1,4 +1,4 @@
-package com.jnasser.core.domain.weather.usecases
+package com.jnasser.core.domain.usecases
 
 import com.jnasser.core.domain.coroutines.DispatcherProvider
 import com.jnasser.core.domain.weather.repositories.WeatherRepository

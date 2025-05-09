@@ -5,10 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jnasser.core.domain.usecases.GetTemperatureUnitsUseCase
 import com.jnasser.core.domain.util.error_handler.DataError
 import com.jnasser.core.domain.util.result_handler.Result
-import com.jnasser.core.domain.weather.usecases.GetWeatherDetailUseCase
-import com.jnasser.core.domain.weather.usecases.UpsertWeatherDetailUseCase
+import com.jnasser.core.domain.usecases.GetWeatherDetailUseCase
+import com.jnasser.core.domain.usecases.UpsertWeatherDetailUseCase
 import com.jnasser.core.presentation.ui.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,7 +17,8 @@ import kotlinx.coroutines.launch
 
 class WeatherDetailViewModel(
     private val upsertWeatherDetailUseCase: UpsertWeatherDetailUseCase,
-    private val getWeatherDetailUseCase: GetWeatherDetailUseCase
+    private val getWeatherDetailUseCase: GetWeatherDetailUseCase,
+    private val getTemperatureUnitsUseCase: GetTemperatureUnitsUseCase
 ): ViewModel() {
 
     var state by mutableStateOf(WeatherDetailState())
@@ -25,6 +27,7 @@ class WeatherDetailViewModel(
     init {
         // TODO("Validate if city is in local db")
         onAction(WeatherDetailAction.OnGetWeatherDetail(13.700961, -89.209179))
+        onAction(WeatherDetailAction.OnGetTemperatureUnits)
     }
 
     private val eventChannel = Channel<WeatherDetailEvent>()
@@ -34,12 +37,20 @@ class WeatherDetailViewModel(
         when(action) {
             WeatherDetailAction.OnChangeFilterToDaily -> TODO()
             WeatherDetailAction.OnChangeFilterToHourly -> TODO()
+            WeatherDetailAction.OnGetTemperatureUnits -> getTemperatureUnits()
             is WeatherDetailAction.OnGetWeatherDetail -> getWeatherDetail(action.lat, action.lon)
             is WeatherDetailAction.OnFollowUp -> {}
             is WeatherDetailAction.OnRemoveFollow -> TODO()
             is WeatherDetailAction.OnSelectDay -> TODO()
             is WeatherDetailAction.OnChangeWindUnit -> state = state.copy(windUnit = action.unit)
             else -> Unit
+        }
+    }
+
+    private fun getTemperatureUnits() {
+        viewModelScope.launch {
+            val temperatureUnits = getTemperatureUnitsUseCase()
+            state = state.copy(temperatureUnits = temperatureUnits)
         }
     }
 
