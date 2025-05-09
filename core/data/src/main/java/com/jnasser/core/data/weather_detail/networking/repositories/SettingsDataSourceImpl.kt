@@ -1,10 +1,10 @@
-package com.jnasser.core.data.weather_detail.networking.common
+package com.jnasser.core.data.weather_detail.networking.repositories
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.jnasser.core.domain.common.SettingsRepository
+import com.jnasser.core.domain.repositories.SettingsRepository
 import com.jnasser.core.domain.enums.TemperatureUnitsEnum
 import com.jnasser.core.domain.enums.WindUnitsEnum
 import kotlinx.coroutines.flow.Flow

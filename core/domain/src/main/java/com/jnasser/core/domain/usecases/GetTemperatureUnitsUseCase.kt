@@ -1,6 +1,6 @@
 package com.jnasser.core.domain.usecases
 
-import com.jnasser.core.domain.common.SettingsRepository
+import com.jnasser.core.domain.repositories.SettingsRepository
 import com.jnasser.core.domain.coroutines.DispatcherProvider
 import com.jnasser.core.domain.enums.TemperatureUnitsEnum
 import kotlinx.coroutines.flow.first

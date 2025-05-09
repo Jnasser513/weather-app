@@ -5,10 +5,10 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.jnasser.core.data.BuildConfig
 import com.jnasser.core.data.weather_detail.networking.HttpClientFactory
-import com.jnasser.core.data.weather_detail.networking.common.SettingsDataSourceImpl
+import com.jnasser.core.data.weather_detail.networking.repositories.SettingsDataSourceImpl
 import com.jnasser.core.data.weather_detail.networking.coroutines.DispatcherProviderImpl
 import com.jnasser.core.data.weather_detail.networking.weather.repositories.OfflineFirstWeatherRepository
-import com.jnasser.core.domain.common.SettingsRepository
+import com.jnasser.core.domain.repositories.SettingsRepository
 import com.jnasser.core.domain.coroutines.DispatcherProvider
 import com.jnasser.core.domain.weather.repositories.WeatherRepository
 import org.koin.android.ext.koin.androidContext

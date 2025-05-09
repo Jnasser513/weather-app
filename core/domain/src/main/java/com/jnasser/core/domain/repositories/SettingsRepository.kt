@@ -1,4 +1,4 @@
-package com.jnasser.core.domain.common
+package com.jnasser.core.domain.repositories
 
 import com.jnasser.core.domain.enums.TemperatureUnitsEnum
 import com.jnasser.core.domain.enums.WindUnitsEnum

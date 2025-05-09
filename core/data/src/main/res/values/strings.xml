@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wind_description_calm">Calm</string>
+    <string name="wind_description_light_air">Light air</string>
+    <string name="wind_description_light_breeze">Light breeze</string>
+    <string name="wind_description_gentle_breeze">Gentle breeze</string>
+    <string name="wind_description_moderate_breeze">Moderate breeze</string>
+    <string name="wind_description_fresh_breeze">Fresh breeze</string>
+    <string name="wind_description_strong_breeze">Strong breeze</string>
+    <string name="wind_description_near_gale">Near gale</string>
+    <string name="wind_description_gale">Gale</string>
+    <string name="wind_description_strong_gale">Strong gale</string>
+    <string name="wind_description_whole_gale">Whole gale</string>
+    <string name="wind_description_storm">Storm</string>
+    <string name="wind_description_hurricane_force">Hurricane force</string>
+</resources>
