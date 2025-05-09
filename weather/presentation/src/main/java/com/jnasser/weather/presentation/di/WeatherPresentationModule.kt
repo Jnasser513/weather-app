@@ -1,0 +1,16 @@
+package com.jnasser.weather.presentation.di
+
+import com.jnasser.core.domain.weather.usecases.GetWeatherDetailUseCase
+import com.jnasser.core.domain.weather.usecases.UpsertWeatherDetailUseCase
+import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
+import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
+
+var weatherPresentationModule = module {
+    viewModelOf(::WeatherDetailViewModel)
+
+    // Use cases
+    singleOf(::UpsertWeatherDetailUseCase)
+    singleOf(::GetWeatherDetailUseCase)
+}

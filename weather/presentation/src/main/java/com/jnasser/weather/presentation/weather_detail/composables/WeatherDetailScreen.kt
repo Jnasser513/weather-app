@@ -3,12 +3,10 @@
 package com.jnasser.weather.presentation.weather_detail.composables
 
 import WeatherAppAnimatedSwipeableButton
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -28,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.domain.city.CityDetail
 import com.jnasser.core.domain.city.Weather
+import com.jnasser.core.domain.weather.model.WeatherDetail
 import com.jnasser.core.presentation.designsystem.components.AnimatedText
 import com.jnasser.core.presentation.designsystem.components.animations.SequentialAnimatedItems
 import com.jnasser.core.presentation.designsystem.components.WeatherAppScaffold
@@ -38,13 +37,10 @@ import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailAction
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailState
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
-import com.jnasser.weather.presentation.weather_detail.composables.air_quality.AirQualityContainer
 import com.jnasser.weather.presentation.weather_detail.composables.forecast.ForecastContainer
-import com.jnasser.weather.presentation.weather_detail.composables.uv.UVContainer
 import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
-import com.jnasser.weather.presentation.weather_detail.model.AirQualityDataUi
-import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
 import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
+import com.jnasser.weather.presentation.weather_detail.toForecastDataUi
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -73,7 +69,7 @@ fun WeatherDetailScreen(
         topApBar = {
             WeatherTopAppBar(
                 config = WeatherTopAppBarConfig(
-                    title = state.city.name,
+                    title = "San Francisco, CA",
                     centerTitle = true,
                     navigationIcon = WeatherTopAppBar.NavigationIcon.Custom(icon = Icons.Outlined.Home,
                         click = {
@@ -110,7 +106,7 @@ fun WeatherDetailScreen(
                             tint = Color(0x6641588A)
                         )
                     }) {
-
+                    onAction(WeatherDetailAction.OnFollowUp(CityDetail()))
                 }
             }
         }) { padding ->
@@ -122,9 +118,9 @@ fun WeatherDetailScreen(
                 {
                     val text = stringResource(
                         R.string.temperature_description,
-                        state.city.temperature,
-                        state.city.weather.description,
-                        state.city.temperatureFeels
+                        state.weather.current?.temp.toString(),
+                        state.weather.current?.weather?.getOrNull(0)?.main.orEmpty(),
+                        state.weather.current?.feelsLike.toString()
                     )
                     AnimatedText(
                         text = text,
@@ -133,7 +129,9 @@ fun WeatherDetailScreen(
                     Spacer(Modifier.height(40.dp))
                 },
                 {
-                    ForecastContainer()
+                    ForecastContainer(
+                        forecastList = state.weather.daily?.map { it.toForecastDataUi() }.orEmpty()
+                    )
                     Spacer(Modifier.height(30.dp))
                 },
                 {
@@ -216,12 +214,7 @@ private fun WeatherDetailScreenPreview() {
     WeatherAppTheme {
         WeatherDetailScreen(
             WeatherDetailState(
-                isLoading = false, city = CityDetail(
-                    name = "San Francisco, CA",
-                    temperature = "50",
-                    temperatureFeels = "53",
-                    weather = Weather(description = "partly cloudy")
-                )
+                isLoading = false, weather = WeatherDetail()
             )
         ) { }
     }

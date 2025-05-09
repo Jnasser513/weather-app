@@ -12,7 +12,7 @@ data class WeatherCurrentDetail(
     val visibility: Int,
     val windSpeed: Float,
     val windDeg: Int,
-    val weather: Weather,
-    val rain: Rain,
-    val snow: Snow
+    val weather: List<Weather>,
+    val rain: Rain? = null,
+    val snow: Snow? = null
 )

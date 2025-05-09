@@ -37,6 +37,7 @@ import com.jnasser.weather.presentation.weather_detail.model.ForecastDataUi
 @Composable
 fun ForecastItem(
     modifier: Modifier = Modifier,
+    id: Int,
     forecastDataUi: ForecastDataUi,
     isSelected: Boolean = false,
     onClick: () -> Unit
@@ -61,6 +62,7 @@ fun ForecastItem(
             style = MaterialTheme.typography.labelLarge
         )
         WeatherContentWithProgress(
+            id = id,
             progress = forecastDataUi.progress,
             progressColors = listOf(Color(0xFF6BBD2D), Color(0xFFCE972A))
         ) {
@@ -77,12 +79,14 @@ fun ForecastItem(
         ) {
             Text(
                 text = forecastDataUi.minTemperature,
-                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
             )
-            Spacer(Modifier.width(2.dp))
+            Spacer(Modifier.width(3.dp))
             Text(
-                text = forecastDataUi.maxTemperature,
-                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
+                text = forecastDataUi.maxTemperature.toInt().toString(),
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -94,6 +98,7 @@ private fun ForecastItemPreview() {
     WeatherAppTheme {
         ForecastItem(
             isSelected = true,
+            id = 1,
             forecastDataUi = ForecastDataUi(
                 title = "Today",
                 icon = "https://openweathermap.org/img/wn/10d@2x.png",

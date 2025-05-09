@@ -7,28 +7,43 @@ import com.jnasser.core.domain.weather.datasources.RemoteWeatherDetailDataSource
 import com.jnasser.core.domain.weather.model.WeatherDetail
 import com.jnasser.core.domain.weather.repositories.WeatherRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 class OfflineFirstWeatherRepository(
-    private val localWeatherDetailDataSource: LocalWeatherDetailDataSource,
+    //private val localWeatherDetailDataSource: LocalWeatherDetailDataSource,
     private val remoteWeatherDetailDataSource: RemoteWeatherDetailDataSource
 ) : WeatherRepository {
 
-    override fun getWeatherDetail(id: Long): Flow<WeatherDetail> =
-        localWeatherDetailDataSource.getWeatherDetail(id)
+    override fun getWeatherDetail(id: Long): Flow<WeatherDetail> {
+        return flowOf<WeatherDetail>()
+    }
+        //localWeatherDetailDataSource.getWeatherDetail(id)
+
+    override suspend fun getWeatherDetail(
+        lat: Double,
+        lon: Double,
+        units: String
+    ): Result<WeatherDetail, DataError> {
+        return when (val result = remoteWeatherDetailDataSource.getWeatherDetail(lat, lon, units)) {
+            is Result.Error -> Result.Error(result.error)
+            is Result.Success -> Result.Success(result.data)
+        }
+    }
 
     override suspend fun upsertWeatherDetail(
         lat: Double,
         lon: Double,
         units: String
     ): Result<Long, DataError> {
-        return when (val result = remoteWeatherDetailDataSource.getWeatherDetail(lat, lon, units)) {
+        return when (val result = getWeatherDetail(lat, lon, units)) {
             is Result.Error -> Result.Error(result.error)
             is Result.Success -> {
-                when (val saveResult =
+                Result.Success(1L)
+                /*when (val saveResult =
                     localWeatherDetailDataSource.saveWeatherDetail(result.data)) {
                     is Result.Error -> Result.Error(saveResult.error)
                     is Result.Success -> saveResult
-                }
+                }*/
             }
         }
     }

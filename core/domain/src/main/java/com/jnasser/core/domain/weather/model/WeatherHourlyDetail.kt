@@ -12,8 +12,8 @@ data class WeatherHourlyDetail(
     val windSpeed: Float,
     val windDeg: Int,
     val windGust: Float,
-    val weather: Weather,
-    val rain: Rain,
-    val snow: Snow,
+    val weather: List<Weather>,
+    val rain: Rain? = null,
+    val snow: Snow? = null,
     val pop: Float
 )

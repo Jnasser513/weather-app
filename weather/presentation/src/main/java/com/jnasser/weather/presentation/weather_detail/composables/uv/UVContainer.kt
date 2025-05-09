@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jnasser.core.presentation.designsystem.components.WeatherContentWithProgress
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.core.presentation.designsystem.theme.WeatherGrey
 import com.jnasser.weather.presentation.R

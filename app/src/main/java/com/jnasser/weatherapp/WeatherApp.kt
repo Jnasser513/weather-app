@@ -1,7 +1,10 @@
 package com.jnasser.weatherapp
 
 import android.app.Application
-import com.jnasser.weather.presentation.di.weatherModule
+import android.content.Context
+import com.jnasser.core.data.weather_detail.networking.di.coreDataModule
+import com.jnasser.weather.network.datasources.di.weatherNetworkModule
+import com.jnasser.weather.presentation.di.weatherPresentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -20,8 +23,15 @@ class WeatherApp: Application() {
             androidLogger()
             androidContext(this@WeatherApp)
             modules(
-                weatherModule
+                weatherPresentationModule,
+                coreDataModule,
+                weatherNetworkModule
             )
         }
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+
     }
 }

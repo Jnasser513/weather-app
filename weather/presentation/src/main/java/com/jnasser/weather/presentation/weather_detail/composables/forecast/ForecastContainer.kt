@@ -27,7 +27,8 @@ import com.jnasser.weather.presentation.weather_detail.model.ForecastDataUi
 
 @Composable
 fun ForecastContainer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    forecastList: List<ForecastDataUi>
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -73,31 +74,7 @@ fun ForecastContainer(
         )
 
         if(showForecastList) {
-            ForecastList(
-                forecastList = listOf(
-                    ForecastDataUi(
-                        title = "Today",
-                        icon = "https://openweathermap.org/img/wn/10d@2x.png",
-                        maxTemperature = "48",
-                        minTemperature = "56",
-                        progress = 0.25f
-                    ),
-                    ForecastDataUi(
-                        title = "Thu",
-                        icon = "https://openweathermap.org/img/wn/10d@2x.png",
-                        maxTemperature = "48",
-                        minTemperature = "56",
-                        progress = 0.48f
-                    ),
-                    ForecastDataUi(
-                        title = "Fri",
-                        icon = "https://openweathermap.org/img/wn/10d@2x.png",
-                        maxTemperature = "48",
-                        minTemperature = "56",
-                        progress = 0.91f
-                    )
-                )
-            )
+            ForecastList(forecastList = forecastList)
         }
     }
 }
@@ -106,6 +83,30 @@ fun ForecastContainer(
 @Composable
 private fun ForecastContainerPreview() {
     WeatherAppTheme {
-        ForecastContainer()
+        ForecastContainer(
+            forecastList = listOf(
+                ForecastDataUi(
+                    title = "Today",
+                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
+                    maxTemperature = "48",
+                    minTemperature = "56",
+                    progress = 0.25f
+                ),
+                ForecastDataUi(
+                    title = "Thu",
+                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
+                    maxTemperature = "48",
+                    minTemperature = "56",
+                    progress = 0.48f
+                ),
+                ForecastDataUi(
+                    title = "Fri",
+                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
+                    maxTemperature = "48",
+                    minTemperature = "56",
+                    progress = 0.91f
+                )
+            )
+        )
     }
 }

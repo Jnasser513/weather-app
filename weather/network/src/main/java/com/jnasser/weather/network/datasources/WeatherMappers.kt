@@ -21,8 +21,8 @@ fun WeatherDetailDto.toWeatherDetail() = WeatherDetail(
     lat = lat,
     lon = lon,
     current = current.toWeatherCurrentDetail(),
-    hourly = hourly.toWeatherHourlyDetail(),
-    daily = daily.toWeatherDailyDetail()
+    hourly = hourly.map { it.toWeatherHourlyDetail() },
+    daily = daily.map { it.toWeatherDailyDetail() }
 )
 
 fun WeatherCurrentDetailDto.toWeatherCurrentDetail() = WeatherCurrentDetail(
@@ -37,9 +37,9 @@ fun WeatherCurrentDetailDto.toWeatherCurrentDetail() = WeatherCurrentDetail(
     visibility = visibility,
     windSpeed = windSpeed,
     windDeg = windDeg,
-    weather = weather.toWeather(),
-    rain = rain.toRain(),
-    snow = snow.toSnow()
+    weather = weather.map { it.toWeather() },
+    rain = rain?.toRain(),
+    snow = snow?.toSnow()
 )
 
 fun WeatherHourlyDetailDto.toWeatherHourlyDetail() = WeatherHourlyDetail(
@@ -54,9 +54,9 @@ fun WeatherHourlyDetailDto.toWeatherHourlyDetail() = WeatherHourlyDetail(
     windSpeed = windSpeed,
     windDeg = windDeg,
     windGust = windGust,
-    weather = weather.toWeather(),
-    rain = rain.toRain(),
-    snow = snow.toSnow(),
+    weather = weather.map { it.toWeather() },
+    rain = rain?.toRain(),
+    snow = snow?.toSnow(),
     pop = pop
 )
 
@@ -68,11 +68,10 @@ fun WeatherDailyDetailDto.toWeatherDailyDetail() = WeatherDailyDetail(
     humidity = humidity,
     uvi = uvi,
     clouds = clouds,
-    visibility = visibility,
     windSpeed = windSpeed,
     windDeg = windDeg,
     windGust = windGust,
-    weather = weather.toWeather(),
+    weather = weather.map { it.toWeather() },
     rain = rain,
     snow = snow,
     pop = pop,
@@ -92,11 +91,11 @@ fun WeatherDto.toWeather() = Weather(
 )
 
 fun RainDto.toRain() = Rain(
-    `1h` = value
+    value = value
 )
 
 fun SnowDto.toSnow() = Snow(
-    `1h` = value
+    value = value
 )
 
 fun TemperatureDto.toTemperature() = Temperature(

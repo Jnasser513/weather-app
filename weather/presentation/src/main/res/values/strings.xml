@@ -18,4 +18,5 @@
     <string name="data_value">%.2f  μg/m3</string>
     <string name="no2">NO2</string>
     <string name="o3">O3</string>
+    <string name="today">Today</string>
 </resources>

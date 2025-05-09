@@ -52,19 +52,10 @@ fun ForecastList(
             ) {
                 ForecastItem(
                     forecastDataUi = item,
+                    id = index,
                     isSelected = false
                 ) {}
             }
         }
-
-        /*items(
-            items = forecastList,
-            key = { it.title }
-        ) {
-            ForecastItem(
-                forecastDataUi = it,
-                isSelected = false
-            ) {}
-        }*/
     }
 }

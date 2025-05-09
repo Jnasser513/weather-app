@@ -16,7 +16,7 @@ data class WeatherCurrentDetailDto(
     val visibility: Int,
     @SerialName(value = "wind_speed") val windSpeed: Float,
     @SerialName(value = "wind_deg") val windDeg: Int,
-    val weather: WeatherDto,
-    val rain: RainDto,
-    val snow: SnowDto
+    val weather: List<WeatherDto>,
+    val rain: RainDto? = null,
+    val snow: SnowDto? = null
 )

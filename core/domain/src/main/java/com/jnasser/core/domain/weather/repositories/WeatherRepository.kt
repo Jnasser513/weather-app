@@ -10,6 +10,12 @@ interface WeatherRepository {
 
     fun getWeatherDetail(id: Long): Flow<WeatherDetail>
 
+    suspend fun getWeatherDetail(
+        lat: Double,
+        lon: Double,
+        units: String
+    ): Result<WeatherDetail, DataError>
+
     suspend fun upsertWeatherDetail(
         lat: Double,
         lon: Double,
