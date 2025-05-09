@@ -13,8 +13,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jnasser.weather.presentation.weather_detail.model.ForecastDataUi
@@ -38,6 +42,8 @@ fun ForecastList(
         }
     }
 
+    var selectedIndex by remember { mutableIntStateOf(0) }
+
     LazyRow(
         modifier = modifier
             .padding(vertical = 10.dp)
@@ -54,8 +60,10 @@ fun ForecastList(
                 ForecastItem(
                     forecastDataUi = item,
                     id = index,
-                    isSelected = false
-                ) {}
+                    isSelected = selectedIndex == index
+                ) {
+                    selectedIndex = index
+                }
             }
         }
     }

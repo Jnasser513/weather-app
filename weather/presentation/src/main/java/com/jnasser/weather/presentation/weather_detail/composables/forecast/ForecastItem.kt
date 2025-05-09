@@ -44,7 +44,7 @@ fun ForecastItem(
 ) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(25.dp))
             .clickable {
                 onClick()
             }
