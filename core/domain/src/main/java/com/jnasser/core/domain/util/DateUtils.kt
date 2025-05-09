@@ -8,16 +8,16 @@ import java.util.Locale
 
 object DateUtils {
 
-    fun getDayNameFromTimeStamp(timeStampMillis: Long): String {
-        val date = Instant.ofEpochMilli(timeStampMillis)
+    fun getDayNameFromTimeStamp(timeStampSeconds: Long): String {
+        val date = Instant.ofEpochSecond(timeStampSeconds)
             .atZone(ZoneId.systemDefault())
             .dayOfWeek
 
         return date.getDisplayName(TextStyle.FULL, Locale.getDefault())
     }
 
-    fun isToday(timeStampMillis: Long): Boolean {
-        val date = Instant.ofEpochMilli(timeStampMillis)
+    fun isToday(timeStampSeconds: Long): Boolean {
+        val date = Instant.ofEpochSecond(timeStampSeconds)
             .atZone(ZoneId.systemDefault()).toLocalDate()
         val today = LocalDate.now()
 

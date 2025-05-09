@@ -40,6 +40,7 @@ fun ForecastList(
 
     LazyRow(
         modifier = modifier
+            .padding(vertical = 10.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
