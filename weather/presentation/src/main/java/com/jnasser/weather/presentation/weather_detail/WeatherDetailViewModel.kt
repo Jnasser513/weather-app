@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class WeatherDetailViewModel(
-    private val upsertWeatherDetailUseCase: UpsertWeatherDetailUseCase,
     private val getWeatherDetailUseCase: GetWeatherDetailUseCase,
     private val getTemperatureUnitsUseCase: GetTemperatureUnitsUseCase
 ): ViewModel() {
@@ -62,7 +61,9 @@ class WeatherDetailViewModel(
 
             when(result) {
                 is Result.Error -> eventChannel.send(WeatherDetailEvent.Error(result.error.asUiText()))
-                is Result.Success -> state = state.copy(weather = result.data)
+                is Result.Success -> {
+                    state = state.copy(weather = result.data)
+                }
             }
         }
     }

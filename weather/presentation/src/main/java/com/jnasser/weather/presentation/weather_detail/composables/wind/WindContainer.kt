@@ -188,7 +188,7 @@ fun WindContainer(
                             end.linkTo(parent.end)
                         }
                         .padding(10.dp),
-                    direction = "ESE"
+                    direction = windDataUi.direction
                 )
                 WindUnitDropdown(
                     modifier = Modifier

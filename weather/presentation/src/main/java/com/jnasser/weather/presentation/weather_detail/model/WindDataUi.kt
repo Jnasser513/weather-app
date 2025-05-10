@@ -4,5 +4,5 @@ data class WindDataUi(
     val title: String,
     val direction: String,
     val velocity: String,
-    val gust: String
+    val gust: String?
 )

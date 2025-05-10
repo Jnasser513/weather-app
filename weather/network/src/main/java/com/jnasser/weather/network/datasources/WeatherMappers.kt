@@ -37,6 +37,7 @@ fun WeatherCurrentDetailDto.toWeatherCurrentDetail() = WeatherCurrentDetail(
     visibility = visibility,
     windSpeed = windSpeed,
     windDeg = windDeg,
+    windGust = windGust,
     weather = weather.map { it.toWeather() },
     rain = rain?.toRain(),
     snow = snow?.toSnow()

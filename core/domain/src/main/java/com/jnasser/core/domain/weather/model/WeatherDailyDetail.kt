@@ -14,6 +14,7 @@ data class WeatherDailyDetail(
     val humidity: Int,
     val uvi: Float,
     val clouds: Int,
+    val windDescription: String = "",
     val windSpeed: Float,
     val windDeg: Int,
     val windGust: Float,

@@ -10,8 +10,10 @@ data class WeatherCurrentDetail(
     val uvi: Float,
     val clouds: Int,
     val visibility: Int,
+    val windDescription: String = "",
     val windSpeed: Float,
     val windDeg: Int,
+    val windGust: Float? = null,
     val weather: List<Weather>,
     val rain: Rain? = null,
     val snow: Snow? = null

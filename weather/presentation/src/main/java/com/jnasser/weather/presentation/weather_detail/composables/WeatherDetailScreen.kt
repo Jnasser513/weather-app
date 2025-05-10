@@ -21,9 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jnasser.core.domain.DefaultValues.EMPTY_STRING
 import com.jnasser.core.domain.city.CityDetail
 import com.jnasser.core.domain.weather.model.WeatherDetail
 import com.jnasser.core.presentation.designsystem.components.AnimatedText
@@ -32,6 +34,8 @@ import com.jnasser.core.presentation.designsystem.components.WeatherAppScaffold
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBar
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBarConfig
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
+import com.jnasser.core.presentation.ui.utils.extensions.getLocalizedWindDescription
+import com.jnasser.core.presentation.ui.utils.extensions.getWindDirectionFromDegrees
 import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailAction
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailState
@@ -60,6 +64,7 @@ fun WeatherDetailScreenRoot(
 fun WeatherDetailScreen(
     state: WeatherDetailState, onAction: (WeatherDetailAction) -> Unit
 ) {
+    val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     var showFab by remember { mutableStateOf(false) }
@@ -134,9 +139,14 @@ fun WeatherDetailScreen(
                     Spacer(Modifier.height(30.dp))
                 },
                 {
+                    val windTitle = context.getLocalizedWindDescription(state.weather.current?.windSpeed)
+                    val windDirection = context.getWindDirectionFromDegrees(state.weather.current?.windDeg)
                     WindContainer(
                         windDataUi = WindDataUi(
-                            "Gentle Breeze", "ESE", "9", "14"
+                            windTitle,
+                            windDirection,
+                            state.weather.current?.windSpeed?.toString() ?: EMPTY_STRING,
+                            state.weather.current?.windGust?.toString()
                         ), windUnit = state.windUnit, onAction = onAction
                     )
                     Spacer(Modifier.height(10.dp))

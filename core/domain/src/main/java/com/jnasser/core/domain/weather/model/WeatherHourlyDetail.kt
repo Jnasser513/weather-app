@@ -9,6 +9,7 @@ data class WeatherHourlyDetail(
     val uvi: Float,
     val clouds: Int,
     val visibility: Int,
+    val windDescription: String = "",
     val windSpeed: Float,
     val windDeg: Int,
     val windGust: Float,
