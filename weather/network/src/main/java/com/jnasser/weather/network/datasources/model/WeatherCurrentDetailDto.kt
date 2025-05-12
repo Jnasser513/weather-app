@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class WeatherCurrentDetailDto(
+    val dt: Long,
     val sunrise: Long,
     val sunset: Long,
     val temp: Float,

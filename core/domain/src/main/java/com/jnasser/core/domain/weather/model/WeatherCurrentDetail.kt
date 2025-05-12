@@ -1,6 +1,7 @@
 package com.jnasser.core.domain.weather.model
 
 data class WeatherCurrentDetail(
+    val dt: Long,
     val sunrise: Long,
     val sunset: Long,
     val temp: Float,

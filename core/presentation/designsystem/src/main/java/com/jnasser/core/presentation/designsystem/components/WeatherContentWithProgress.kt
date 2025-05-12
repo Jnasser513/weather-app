@@ -38,6 +38,8 @@ fun WeatherContentWithProgress(
     id: Int? = null,
     progress: Float,
     progressColors: List<Color>,
+    showCircle: Boolean = false,
+    showArcComplete: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val animatedProgress = remember { Animatable(0f) }
@@ -82,6 +84,23 @@ fun WeatherContentWithProgress(
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
 
+            val angleRad = Math.toRadians((startAngle + (sweepAngle * animatedProgress.value)).toDouble())
+
+            val circleX = center.x + radius * cos(angleRad).toFloat()
+            val circleY = center.y + radius * sin(angleRad).toFloat()
+
+            val circleColor = lerpColor(
+                start = progressColors.first(),
+                end = progressColors.last(),
+                fraction = animatedProgress.value
+            )
+
+            if(showCircle) drawCircle(
+                color = circleColor,
+                radius = 3.dp.toPx(),
+                center = Offset(circleX, circleY)
+            )
+
             drawArc(
                 brush = Brush.linearGradient(
                     colors = progressColors,
@@ -89,7 +108,7 @@ fun WeatherContentWithProgress(
                     end = polarToCartesian(center, radius, endRadians)
                 ),
                 startAngle = startAngle,
-                sweepAngle = sweepAngle * animatedProgress.value,
+                sweepAngle = if(showArcComplete) sweepAngle else sweepAngle * animatedProgress.value,
                 useCenter = false,
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
@@ -99,11 +118,19 @@ fun WeatherContentWithProgress(
     }
 }
 
-
-fun polarToCartesian(center: Offset, radius: Float, angleRad: Double): Offset {
+private fun polarToCartesian(center: Offset, radius: Float, angleRad: Double): Offset {
     return Offset(
         (center.x + cos(angleRad) * radius).toFloat(),
         (center.y + sin(angleRad) * radius).toFloat()
+    )
+}
+
+private fun lerpColor(start: Color, end: Color, fraction: Float): Color {
+    return Color(
+        red = start.red + (end.red - start.red) * fraction,
+        green = start.green + (end.green - start.green) * fraction,
+        blue = start.blue + (end.blue - start.blue) * fraction,
+        alpha = start.alpha + (end.alpha - start.alpha) * fraction
     )
 }
 
@@ -114,7 +141,7 @@ private fun WeatherContentWithProgressPreview() {
         WeatherContentWithProgress(
             modifier = Modifier.size(45.dp),
             id = 1,
-            progress = 0.9f,
+            progress = 0.2f,
             progressColors = listOf(Color(0xFF6BBD2D), Color(0xFFCE2A2A))
         ) {
             Text(

@@ -61,9 +61,12 @@ fun ForecastItem(
             text = forecastDataUi.title,
             style = MaterialTheme.typography.labelLarge
         )
+
         WeatherContentWithProgress(
             id = id,
-            progress = forecastDataUi.progress,
+            progress = forecastDataUi.progress ?: 0f,
+            showCircle = forecastDataUi.currentTemperature != null,
+            showArcComplete = true,
             progressColors = listOf(Color(0xFF6BBD2D), Color(0xFFCE972A))
         ) {
             SubcomposeAsyncImage(

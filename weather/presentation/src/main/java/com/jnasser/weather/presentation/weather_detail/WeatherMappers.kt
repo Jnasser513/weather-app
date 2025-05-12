@@ -9,6 +9,5 @@ fun WeatherDailyDetail.toForecastDataUi(symbol: String) = ForecastDataUi(
     title = if(DateUtils.isToday(dt)) "Today" else DateUtils.getDayNameFromTimeStamp(dt),
     icon = "https://openweathermap.org/img/wn/${weather.getOrNull(0)?.icon}@2x.png",
     maxTemperature = "${temp.max?.roundToInt()}$symbol",
-    minTemperature = "${temp.min?.roundToInt()}$symbol",
-    progress = 0.9f
+    minTemperature = "${temp.min?.roundToInt()}$symbol"
 )

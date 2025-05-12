@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.domain.DefaultValues.EMPTY_STRING
 import com.jnasser.core.domain.city.CityDetail
+import com.jnasser.core.domain.util.DateUtils
 import com.jnasser.core.domain.weather.model.WeatherDetail
 import com.jnasser.core.presentation.designsystem.components.AnimatedText
 import com.jnasser.core.presentation.designsystem.components.animations.SequentialAnimatedItems
@@ -133,8 +134,21 @@ fun WeatherDetailScreen(
                     Spacer(Modifier.height(40.dp))
                 },
                 {
+                    val today = state.weather.daily?.first() { DateUtils.isToday(it.dt) }
+                    val forecastList = state.weather.daily?.map { forecast ->
+                        val mappedData = forecast.toForecastDataUi(state.temperatureUnits.symbol)
+                        if(forecast == today) {
+                            val progress = ((state.weather.current?.temp?.minus(forecast.temp.min ?: 0f))?.div(
+                                (forecast.temp.max?.minus(forecast.temp.min ?: 0f) ?: 0f))
+                                ?.times(100)
+                            )
+                            mappedData.copy(currentTemperature = state.weather.current?.temp, progress = progress)
+                        }
+                        else mappedData
+                    }
+
                     ForecastContainer(
-                        forecastList = state.weather.daily?.map { it.toForecastDataUi(state.temperatureUnits.symbol) }.orEmpty()
+                        forecastList = forecastList.orEmpty()
                     )
                     Spacer(Modifier.height(30.dp))
                 },

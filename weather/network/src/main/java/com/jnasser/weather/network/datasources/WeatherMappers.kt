@@ -26,6 +26,7 @@ fun WeatherDetailDto.toWeatherDetail() = WeatherDetail(
 )
 
 fun WeatherCurrentDetailDto.toWeatherCurrentDetail() = WeatherCurrentDetail(
+    dt = dt,
     sunrise = sunrise,
     sunset = sunset,
     temp = temp,
