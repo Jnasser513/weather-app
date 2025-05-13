@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jnasser.core.domain.DefaultValues.EMPTY_STRING
+import com.jnasser.core.domain.constants.DefaultValues.EMPTY_STRING
 import com.jnasser.core.domain.city.CityDetail
 import com.jnasser.core.domain.util.DateUtils
 import com.jnasser.core.domain.weather.model.WeatherDetail

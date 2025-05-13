@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.jnasser.core.data.BuildConfig
 import com.jnasser.core.data.weather_detail.networking.HttpClientFactory
-import com.jnasser.core.data.weather_detail.networking.repositories.SettingsDataSourceImpl
+import com.jnasser.core.data.datastore.SettingsDataSourceImpl
 import com.jnasser.core.data.weather_detail.networking.coroutines.DispatcherProviderImpl
 import com.jnasser.core.data.weather_detail.networking.weather.repositories.OfflineFirstWeatherRepository
 import com.jnasser.core.domain.repositories.SettingsRepository

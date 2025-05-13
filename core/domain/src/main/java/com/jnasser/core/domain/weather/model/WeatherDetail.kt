@@ -1,6 +1,6 @@
 package com.jnasser.core.domain.weather.model
 
-import com.jnasser.core.domain.DefaultValues.EMPTY_DOUBLE
+import com.jnasser.core.domain.constants.DefaultValues.EMPTY_DOUBLE
 
 
 data class WeatherDetail(
