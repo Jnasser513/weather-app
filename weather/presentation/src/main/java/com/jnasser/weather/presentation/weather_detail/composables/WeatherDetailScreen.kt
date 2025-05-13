@@ -138,10 +138,15 @@ fun WeatherDetailScreen(
                     val forecastList = state.weather.daily?.map { forecast ->
                         val mappedData = forecast.toForecastDataUi(state.temperatureUnits.symbol)
                         if(forecast == today) {
-                            val progress = ((state.weather.current?.temp?.minus(forecast.temp.min ?: 0f))?.div(
-                                (forecast.temp.max?.minus(forecast.temp.min ?: 0f) ?: 0f))
-                                ?.times(100)
-                            )
+                            val minTemp = forecast.temp.min ?: 0f
+                            val maxTemp = forecast.temp.max ?: 0f
+                            val currentTemp = state.weather.current?.temp
+
+                            val progress = if (currentTemp != null && maxTemp != minTemp) {
+                                ((currentTemp - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
+                            } else {
+                                0f
+                            }
                             mappedData.copy(currentTemperature = state.weather.current?.temp, progress = progress)
                         }
                         else mappedData
