@@ -1,5 +1,6 @@
 package com.jnasser.core.domain.usecases
 
+import com.jnasser.core.domain.constants.PreferencesKeys
 import com.jnasser.core.domain.coroutines.DispatcherProvider
 import com.jnasser.core.domain.enums.WindUnitsEnum
 import com.jnasser.core.domain.repositories.SettingsRepository
@@ -10,7 +11,7 @@ class UpdateWindUnitsUseCase(
     private val dispatcher: DispatcherProvider
 ) {
 
-    suspend fun updateWindUnits(unit: WindUnitsEnum) = withContext(dispatcher.io) {
-        settingsRepository.s
+    suspend operator fun invoke(unit: WindUnitsEnum) = withContext(dispatcher.io) {
+        settingsRepository.setValue(PreferencesKeys.KEY_WIND_UNITS, unit.name)
     }
 }

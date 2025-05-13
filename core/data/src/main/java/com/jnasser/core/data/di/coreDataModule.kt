@@ -1,4 +1,4 @@
-package com.jnasser.core.data.weather_detail.networking.di
+package com.jnasser.core.data.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -17,7 +17,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import java.io.File
 
-private const val SHARED_DATA_STORE_PREFERENCE_NAME = "datastore.weatherapp.settings"
+private const val SHARED_DATA_STORE_PREFERENCE_NAME = "weatherapp.settings.preferences_pb"
 
 val coreDataModule = module {
     // Network

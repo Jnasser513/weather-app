@@ -12,7 +12,7 @@ data class WeatherHourlyDetailDto(
     val humidity: Int,
     val uvi: Float,
     val clouds: Int,
-    val visibility: Int,
+    val visibility: Int? = null,
     @SerialName(value = "wind_speed") val windSpeed: Float,
     @SerialName(value = "wind_deg") val windDeg: Int,
     @SerialName(value = "wind_gust") val windGust: Float,

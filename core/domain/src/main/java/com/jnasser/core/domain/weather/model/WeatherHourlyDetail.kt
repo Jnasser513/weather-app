@@ -8,7 +8,7 @@ data class WeatherHourlyDetail(
     val humidity: Int,
     val uvi: Float,
     val clouds: Int,
-    val visibility: Int,
+    val visibility: Int? = null,
     val windDescription: String = "",
     val windSpeed: Float,
     val windDeg: Int,
