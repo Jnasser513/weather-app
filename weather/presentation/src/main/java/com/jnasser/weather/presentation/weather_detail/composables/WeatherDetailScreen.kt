@@ -45,6 +45,7 @@ import com.jnasser.weather.presentation.weather_detail.composables.forecast.Fore
 import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
 import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
 import com.jnasser.weather.presentation.weather_detail.toForecastDataUi
+import com.jnasser.weather.presentation.weather_detail.toWindDataUi
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -136,7 +137,6 @@ fun WeatherDetailScreen(
                 {
                     val today = state.weather.daily?.first() { DateUtils.isToday(it.dt) }
                     val forecastList = state.weather.daily?.map { forecast ->
-                        val mappedData = forecast.toForecastDataUi(state.temperatureUnits.symbol)
                         if(forecast == today) {
                             val minTemp = forecast.temp.min ?: 0f
                             val maxTemp = forecast.temp.max ?: 0f
@@ -147,9 +147,9 @@ fun WeatherDetailScreen(
                             } else {
                                 0f
                             }
-                            mappedData.copy(currentTemperature = state.weather.current?.temp, progress = progress)
+                            forecast.toForecastDataUi(state.temperatureUnits.symbol, progress, currentTemp)
                         }
-                        else mappedData
+                        else forecast.toForecastDataUi(state.temperatureUnits.symbol)
                     }
 
                     ForecastContainer(
@@ -161,77 +161,23 @@ fun WeatherDetailScreen(
                     val windTitle = context.getLocalizedWindDescription(state.weather.current?.windSpeed)
                     val windDirection = context.getWindDirectionFromDegrees(state.weather.current?.windDeg)
                     WindContainer(
-                        windDataUi = WindDataUi(
+                        windDataUi = state.weather.current.toWindDataUi(
                             windTitle,
-                            windDirection,
-                            state.weather.current?.windSpeed?.toString() ?: EMPTY_STRING,
-                            state.weather.current?.windGust?.toString()
+                            windDirection
                         ), windUnit = state.windUnit, onAction = onAction
                     )
                     Spacer(Modifier.height(10.dp))
                 },
                 {
-                    ExtraDataComponents()
+                    ExtraDataComponents(
+                        uvDataUi =
+                    )
                 }
             ),
             onSequenceEnd = {
                 showFab = true
             }
         )
-        /*LazyColumn(
-            contentPadding = PaddingValues(20.dp)
-        ) {
-            item {
-                val text = stringResource(
-                    R.string.temperature_description,
-                    state.city.temperature,
-                    state.city.weather.description,
-                    state.city.temperatureFeels
-                )
-                AnimatedText(
-                    text = text,
-                    highlightWordPositions = listOf(2, 4, 5)
-                )
-                Spacer(Modifier.height(40.dp))
-            }
-
-            item {
-                ForecastContainer()
-                Spacer(Modifier.height(30.dp))
-            }
-
-            *//*item {
-                WindContainer(
-                    windDataUi = WindDataUi(
-                        "Gentle Breeze", "ESE", "9", "14"
-                    ), windUnit = state.windUnit, onAction = onAction
-                )
-                Spacer(Modifier.height(10.dp))
-            }
-
-            item {
-                Row(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    UVContainer(
-                        modifier = Modifier.weight(1f), uvDataUi = UVDataUi(
-                            uvValue = 1,
-                            state = "Low",
-                            preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
-                        )
-                    )
-                    Spacer(Modifier.width(15.dp))
-                    AirQualityContainer(
-                        modifier = Modifier.weight(1f), airQualityDataUi = AirQualityDataUi(
-                            airQuality = 1,
-                            airCo = 201.94053649902344,
-                            airNO2 = 0.7711350917816162,
-                            o3 = 68.66455078125
-                        )
-                    )
-                }
-            }*//*
-        }*/
     }
 }
 

@@ -25,7 +25,8 @@ import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
 
 @Composable
 fun ExtraDataComponents(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    uvDataUi: UVDataUi
 ) {
     var visible by remember { mutableStateOf(false) }
 
