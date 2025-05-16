@@ -43,6 +43,7 @@ import com.jnasser.weather.presentation.weather_detail.WeatherDetailState
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
 import com.jnasser.weather.presentation.weather_detail.composables.forecast.ForecastContainer
 import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
+import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
 import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
 import com.jnasser.weather.presentation.weather_detail.toForecastDataUi
 import com.jnasser.weather.presentation.weather_detail.toWindDataUi
@@ -124,9 +125,9 @@ fun WeatherDetailScreen(
                 {
                     val text = stringResource(
                         R.string.temperature_description,
-                        "${state.weather.current?.temp}${state.temperatureUnits.symbol}",
-                        state.weather.current?.weather?.getOrNull(0)?.main.orEmpty(),
-                        "${state.weather.current?.feelsLike}${state.temperatureUnits.symbol}"
+                        "${state.weatherSelection.currentTemp}${state.temperatureUnits.symbol}",
+                        state.weatherSelection.weatherDescription.orEmpty(),
+                        "${state.weatherSelection.temperatureFeelsLike}${state.temperatureUnits.symbol}"
                     )
                     AnimatedText(
                         text = text,
@@ -158,19 +159,25 @@ fun WeatherDetailScreen(
                     Spacer(Modifier.height(30.dp))
                 },
                 {
-                    val windTitle = context.getLocalizedWindDescription(state.weather.current?.windSpeed)
-                    val windDirection = context.getWindDirectionFromDegrees(state.weather.current?.windDeg)
+                    val windTitle = context.getLocalizedWindDescription(state.weatherSelection.windSpeed)
+                    val windDirection = context.getWindDirectionFromDegrees(state.weatherSelection.windDeg)
                     WindContainer(
-                        windDataUi = state.weather.current.toWindDataUi(
-                            windTitle,
-                            windDirection
-                        ), windUnit = state.windUnit, onAction = onAction
+                        windDataUi = state.weatherSelection.windData.copy(
+                            title = windTitle,
+                            direction = windDirection
+                        ),
+                        windUnit = state.windUnit,
+                        onAction = onAction
                     )
                     Spacer(Modifier.height(10.dp))
                 },
                 {
                     ExtraDataComponents(
-                        uvDataUi =
+                        uvDataUi = UVDataUi(
+                            uvValue = 1,
+                            state = "Low",
+                            preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
+                        )
                     )
                 }
             ),
