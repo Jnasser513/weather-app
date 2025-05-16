@@ -22,12 +22,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.presentation.designsystem.components.animations.AnimatedContent
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
+import com.jnasser.weather.domain.repositories.ForecastSelection
 import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_detail.model.ForecastDataUi
 
 @Composable
 fun ForecastContainer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    forecastList: List<ForecastDataUi>,
+    selectedToggle: ForecastSelection = ForecastSelection.DAILY,
+    onDailyClick: () -> Unit,
+    onHourlyClick: () -> Unit,
+    selectedItem: (Long) -> Unit
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -60,12 +66,9 @@ fun ForecastContainer(
                         )
                     )
                     ForecastOptions(
-                        onDailyClick = {
-
-                        },
-                        onHourlyClick = {
-
-                        }
+                        selectedToggle = selectedToggle,
+                        onDailyClick = onDailyClick,
+                        onHourlyClick = onHourlyClick
                     )
                 }
                 Spacer(Modifier.height(10.dp))
@@ -74,29 +77,8 @@ fun ForecastContainer(
 
         if(showForecastList) {
             ForecastList(
-                forecastList = listOf(
-                    ForecastDataUi(
-                        title = "Today",
-                        icon = "https://openweathermap.org/img/wn/10d@2x.png",
-                        maxTemperature = "48",
-                        minTemperature = "56",
-                        progress = 0.25f
-                    ),
-                    ForecastDataUi(
-                        title = "Thu",
-                        icon = "https://openweathermap.org/img/wn/10d@2x.png",
-                        maxTemperature = "48",
-                        minTemperature = "56",
-                        progress = 0.48f
-                    ),
-                    ForecastDataUi(
-                        title = "Fri",
-                        icon = "https://openweathermap.org/img/wn/10d@2x.png",
-                        maxTemperature = "48",
-                        minTemperature = "56",
-                        progress = 0.91f
-                    )
-                )
+                forecastList = forecastList,
+                selectedItem = selectedItem
             )
         }
     }
@@ -106,6 +88,36 @@ fun ForecastContainer(
 @Composable
 private fun ForecastContainerPreview() {
     WeatherAppTheme {
-        ForecastContainer()
+        ForecastContainer(
+            forecastList = listOf(
+                ForecastDataUi(
+                    dt = 1,
+                    title = "Today",
+                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
+                    maxTemperature = "48",
+                    minTemperature = "56",
+                    progress = 0.25f
+                ),
+                ForecastDataUi(
+                    dt = 2,
+                    title = "Thu",
+                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
+                    maxTemperature = "48",
+                    minTemperature = "56",
+                    progress = 0.48f
+                ),
+                ForecastDataUi(
+                    dt = 3,
+                    title = "Fri",
+                    icon = "https://openweathermap.org/img/wn/10d@2x.png",
+                    maxTemperature = "48",
+                    minTemperature = "56",
+                    progress = 0.91f
+                )
+            ),
+            selectedItem = {},
+            onDailyClick = {},
+            onHourlyClick = {}
+        )
     }
 }

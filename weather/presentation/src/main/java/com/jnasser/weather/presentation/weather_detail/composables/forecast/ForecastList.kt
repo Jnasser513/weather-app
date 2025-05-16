@@ -13,8 +13,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jnasser.weather.presentation.weather_detail.model.ForecastDataUi
@@ -24,7 +28,8 @@ import kotlinx.coroutines.delay
 fun ForecastList(
     modifier: Modifier = Modifier,
     forecastList: List<ForecastDataUi>,
-    delayPerItem: Long = 100L
+    delayPerItem: Long = 100L,
+    selectedItem: (Long) -> Unit
 ) {
     val visibleStates = remember { mutableStateListOf<Boolean>() }
 
@@ -38,8 +43,11 @@ fun ForecastList(
         }
     }
 
+    var selectedIndex by remember { mutableIntStateOf(0) }
+
     LazyRow(
         modifier = modifier
+            .padding(vertical = 10.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
@@ -52,19 +60,13 @@ fun ForecastList(
             ) {
                 ForecastItem(
                     forecastDataUi = item,
-                    isSelected = false
-                ) {}
+                    id = index,
+                    isSelected = selectedIndex == index
+                ) {
+                    selectedIndex = index
+                    selectedItem(item.dt)
+                }
             }
         }
-
-        /*items(
-            items = forecastList,
-            key = { it.title }
-        ) {
-            ForecastItem(
-                forecastDataUi = it,
-                isSelected = false
-            ) {}
-        }*/
     }
 }

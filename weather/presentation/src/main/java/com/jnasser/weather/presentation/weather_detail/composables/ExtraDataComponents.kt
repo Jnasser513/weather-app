@@ -25,7 +25,8 @@ import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
 
 @Composable
 fun ExtraDataComponents(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    uvDataUi: UVDataUi
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -38,7 +39,7 @@ fun ExtraDataComponents(
     ) {
         AnimatedContent(
             visible = visible,
-            transition = fadeIn(
+            enterAnim = fadeIn(
                 animationSpec = tween(
                     durationMillis = 500,
                     easing = FastOutSlowInEasing

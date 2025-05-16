@@ -1,4 +1,4 @@
-package com.jnasser.core.domain
+package com.jnasser.core.domain.constants
 
 object DefaultValues {
     const val EMPTY_STRING = ""

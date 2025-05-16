@@ -1,7 +1,7 @@
 package com.jnasser.weather.presentation.weather_detail.model
 
-import com.jnasser.core.domain.DefaultValues.EMPTY_DOUBLE
-import com.jnasser.core.domain.DefaultValues.EMPTY_INT
+import com.jnasser.core.domain.constants.DefaultValues.EMPTY_DOUBLE
+import com.jnasser.core.domain.constants.DefaultValues.EMPTY_INT
 
 data class AirQualityDataUi(
     val airQuality: Int = EMPTY_INT,

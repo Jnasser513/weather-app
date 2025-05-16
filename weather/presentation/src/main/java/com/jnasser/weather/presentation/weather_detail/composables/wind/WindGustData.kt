@@ -18,7 +18,7 @@ import com.jnasser.weather.presentation.R
 fun WindGustData(
     modifier: Modifier = Modifier,
     velocity: String,
-    gust: String,
+    gust: String?,
     windUnit: WindUnitsEnum
 ) {
     Column(
@@ -44,25 +44,27 @@ fun WindGustData(
                 append(" ${windUnit.symbol}")
             }
         })
-        Text(text = buildAnnotatedString {
-            withStyle(
-                style = SpanStyle(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 14.sp
-                )
-            ) {
-                append(stringResource(R.string.gusts))
-            }
-            withStyle(
-                style = SpanStyle(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Light,
-                    fontSize = 13.sp
-                )
-            ) {
-                append(stringResource(R.string.velocity, gust, windUnit.symbol))
-            }
-        })
+        gust?.let {
+            Text(text = buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp
+                    )
+                ) {
+                    append(stringResource(R.string.gusts))
+                }
+                withStyle(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Light,
+                        fontSize = 13.sp
+                    )
+                ) {
+                    append(stringResource(R.string.velocity, gust, windUnit.symbol))
+                }
+            })
+        }
     }
 }

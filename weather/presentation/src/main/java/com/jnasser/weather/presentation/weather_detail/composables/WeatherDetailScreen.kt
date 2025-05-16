@@ -3,12 +3,10 @@
 package com.jnasser.weather.presentation.weather_detail.composables
 
 import WeatherAppAnimatedSwipeableButton
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -23,28 +21,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.domain.city.CityDetail
-import com.jnasser.core.domain.city.Weather
+import com.jnasser.core.domain.util.DateUtils
+import com.jnasser.core.domain.weather.model.WeatherDetail
 import com.jnasser.core.presentation.designsystem.components.AnimatedText
 import com.jnasser.core.presentation.designsystem.components.animations.SequentialAnimatedItems
 import com.jnasser.core.presentation.designsystem.components.WeatherAppScaffold
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBar
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBarConfig
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
+import com.jnasser.core.presentation.ui.utils.extensions.getLocalizedWindDescription
+import com.jnasser.core.presentation.ui.utils.extensions.getWindDirectionFromDegrees
+import com.jnasser.weather.domain.repositories.ForecastSelection
 import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailAction
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailState
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
-import com.jnasser.weather.presentation.weather_detail.composables.air_quality.AirQualityContainer
 import com.jnasser.weather.presentation.weather_detail.composables.forecast.ForecastContainer
-import com.jnasser.weather.presentation.weather_detail.composables.uv.UVContainer
 import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
-import com.jnasser.weather.presentation.weather_detail.model.AirQualityDataUi
 import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
-import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
+import com.jnasser.weather.presentation.weather_detail.model.toForecastDataUi
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -63,8 +63,10 @@ fun WeatherDetailScreenRoot(
 
 @Composable
 fun WeatherDetailScreen(
-    state: WeatherDetailState, onAction: (WeatherDetailAction) -> Unit
+    state: WeatherDetailState,
+    onAction: (WeatherDetailAction) -> Unit
 ) {
+    val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     var showFab by remember { mutableStateOf(false) }
@@ -73,7 +75,7 @@ fun WeatherDetailScreen(
         topApBar = {
             WeatherTopAppBar(
                 config = WeatherTopAppBarConfig(
-                    title = state.city.name,
+                    title = "San Francisco, CA",
                     centerTitle = true,
                     navigationIcon = WeatherTopAppBar.NavigationIcon.Custom(icon = Icons.Outlined.Home,
                         click = {
@@ -110,7 +112,7 @@ fun WeatherDetailScreen(
                             tint = Color(0x6641588A)
                         )
                     }) {
-
+                    onAction(WeatherDetailAction.OnFollowUp(CityDetail()))
                 }
             }
         }) { padding ->
@@ -120,92 +122,85 @@ fun WeatherDetailScreen(
                 .padding(padding),
             items = listOf(
                 {
-                    val text = stringResource(
+                    val text = if(state.weatherSelection.isCurrent) stringResource(
+                        R.string.temperature_today_description,
+                        "${state.weatherSelection.currentTemp}${state.temperatureUnits.symbol}",
+                        state.weatherSelection.weatherDescription.orEmpty(),
+                        "${state.weatherSelection.temperatureFeelsLike}${state.temperatureUnits.symbol}"
+                    ) else stringResource(
                         R.string.temperature_description,
-                        state.city.temperature,
-                        state.city.weather.description,
-                        state.city.temperatureFeels
+                        "${state.weatherSelection.maxTemp}${state.temperatureUnits.symbol}",
+                        "${state.weatherSelection.minTemp}${state.temperatureUnits.symbol}",
+                        state.weatherSelection.day
                     )
                     AnimatedText(
                         text = text,
-                        highlightWordPositions = listOf(2, 4, 5)
+                        highlightWordPositions =
+                            if(state.weatherSelection.isCurrent) listOf(2, 4, 5)
+                            else listOf()
                     )
                     Spacer(Modifier.height(40.dp))
                 },
                 {
-                    ForecastContainer()
+                    val today = state.weather.daily?.first() { DateUtils.isToday(it.dt) }
+                    val forecastList = state.weather.daily?.map { forecast ->
+                        if(forecast == today) {
+                            val minTemp = forecast.temp.min ?: 0f
+                            val maxTemp = forecast.temp.max ?: 0f
+                            val currentTemp = state.weather.current?.temp
+
+                            val progress = if (currentTemp != null && maxTemp != minTemp) {
+                                ((currentTemp - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
+                            } else {
+                                0f
+                            }
+                            forecast.toForecastDataUi(state.temperatureUnits.symbol, progress, currentTemp)
+                        }
+                        else forecast.toForecastDataUi(state.temperatureUnits.symbol)
+                    }
+
+                    ForecastContainer(
+                        forecastList = forecastList.orEmpty(),
+                        selectedToggle = state.forecastSelection,
+                        onDailyClick = {
+                            onAction(WeatherDetailAction.OnSelectToggle(ForecastSelection.DAILY))
+                        },
+                        onHourlyClick = {
+                            onAction(WeatherDetailAction.OnSelectToggle(ForecastSelection.HOURLY))
+                        },
+                        selectedItem = { time ->
+                            onAction(WeatherDetailAction.OnSelectForecast(time))
+                        }
+                    )
                     Spacer(Modifier.height(30.dp))
                 },
                 {
+                    val windTitle = context.getLocalizedWindDescription(state.weatherSelection.windSpeed)
+                    val windDirection = context.getWindDirectionFromDegrees(state.weatherSelection.windDeg)
                     WindContainer(
-                        windDataUi = WindDataUi(
-                            "Gentle Breeze", "ESE", "9", "14"
-                        ), windUnit = state.windUnit, onAction = onAction
+                        windDataUi = state.weatherSelection.windData.copy(
+                            title = windTitle,
+                            direction = windDirection
+                        ),
+                        windUnit = state.windUnit,
+                        onAction = onAction
                     )
                     Spacer(Modifier.height(10.dp))
                 },
                 {
-                    ExtraDataComponents()
+                    ExtraDataComponents(
+                        uvDataUi = UVDataUi(
+                            uvValue = 1,
+                            state = "Low",
+                            preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
+                        )
+                    )
                 }
             ),
             onSequenceEnd = {
                 showFab = true
             }
         )
-        /*LazyColumn(
-            contentPadding = PaddingValues(20.dp)
-        ) {
-            item {
-                val text = stringResource(
-                    R.string.temperature_description,
-                    state.city.temperature,
-                    state.city.weather.description,
-                    state.city.temperatureFeels
-                )
-                AnimatedText(
-                    text = text,
-                    highlightWordPositions = listOf(2, 4, 5)
-                )
-                Spacer(Modifier.height(40.dp))
-            }
-
-            item {
-                ForecastContainer()
-                Spacer(Modifier.height(30.dp))
-            }
-
-            *//*item {
-                WindContainer(
-                    windDataUi = WindDataUi(
-                        "Gentle Breeze", "ESE", "9", "14"
-                    ), windUnit = state.windUnit, onAction = onAction
-                )
-                Spacer(Modifier.height(10.dp))
-            }
-
-            item {
-                Row(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    UVContainer(
-                        modifier = Modifier.weight(1f), uvDataUi = UVDataUi(
-                            uvValue = 1,
-                            state = "Low",
-                            preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
-                        )
-                    )
-                    Spacer(Modifier.width(15.dp))
-                    AirQualityContainer(
-                        modifier = Modifier.weight(1f), airQualityDataUi = AirQualityDataUi(
-                            airQuality = 1,
-                            airCo = 201.94053649902344,
-                            airNO2 = 0.7711350917816162,
-                            o3 = 68.66455078125
-                        )
-                    )
-                }
-            }*//*
-        }*/
     }
 }
 
@@ -216,12 +211,7 @@ private fun WeatherDetailScreenPreview() {
     WeatherAppTheme {
         WeatherDetailScreen(
             WeatherDetailState(
-                isLoading = false, city = CityDetail(
-                    name = "San Francisco, CA",
-                    temperature = "50",
-                    temperatureFeels = "53",
-                    weather = Weather(description = "partly cloudy")
-                )
+                isLoading = false, weather = WeatherDetail()
             )
         ) { }
     }

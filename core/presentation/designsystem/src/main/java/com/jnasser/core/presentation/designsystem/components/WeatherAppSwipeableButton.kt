@@ -16,6 +16,7 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -134,7 +135,7 @@ fun WeatherAppSwipeableButton(
             .width(width)
             .anchoredDraggable(
                 state = state,
-                orientation = Orientation.Horizontal
+                orientation = Orientation.Horizontal,
             )
             .background(Color(0x6641588A), RoundedCornerShape(dragSize))
     ) {
@@ -178,13 +179,12 @@ fun WeatherAppSwipeableButton(
                 .size(dragSize),
             progress = progress,
             draggableIconActive = draggableIconActive,
-            draggableIconInactive = draggableIconInactive,
-            onComplete = {
-                if (state.currentValue == ConfirmationState.Confirmed) {
-                    onComplete()
-                }
-            }
+            draggableIconInactive = draggableIconInactive
         )
+
+        LaunchedEffect(state.settledValue) {
+            if(state.settledValue == ConfirmationState.Confirmed) onComplete()
+        }
     }
 }
 
@@ -193,9 +193,9 @@ private fun DraggableControl(
     modifier: Modifier,
     progress: Float,
     draggableIconActive: @Composable () -> Unit,
-    draggableIconInactive: @Composable () -> Unit,
-    onComplete: () -> Unit
+    draggableIconInactive: @Composable () -> Unit
 ) {
+
     Box(
         modifier
             .padding(4.dp)
@@ -207,7 +207,6 @@ private fun DraggableControl(
         Crossfade(targetState = isConfirmed) {
             if (it) {
                 draggableIconActive()
-                onComplete()
             } else {
                 draggableIconInactive()
             }

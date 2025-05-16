@@ -1,9 +1,9 @@
 package com.jnasser.core.domain.city
 
-import com.jnasser.core.domain.DefaultValues.EMPTY_DOUBLE
-import com.jnasser.core.domain.DefaultValues.EMPTY_FLOAT
-import com.jnasser.core.domain.DefaultValues.EMPTY_INT
-import com.jnasser.core.domain.DefaultValues.EMPTY_STRING
+import com.jnasser.core.domain.constants.DefaultValues.EMPTY_DOUBLE
+import com.jnasser.core.domain.constants.DefaultValues.EMPTY_FLOAT
+import com.jnasser.core.domain.constants.DefaultValues.EMPTY_INT
+import com.jnasser.core.domain.constants.DefaultValues.EMPTY_STRING
 
 data class CityDetail(
     val name: String = EMPTY_STRING,

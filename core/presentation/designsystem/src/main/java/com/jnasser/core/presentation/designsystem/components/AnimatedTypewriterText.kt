@@ -5,6 +5,7 @@ package com.jnasser.core.presentation.designsystem.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -22,9 +23,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import com.jnasser.core.presentation.designsystem.components.animations.AnimatedContent
 import kotlinx.coroutines.delay
-import java.text.BreakIterator
-import java.text.StringCharacterIterator
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun AnimatedTypewriterText(
@@ -77,6 +78,9 @@ fun AnimatedText(
     textStyle: TextStyle = MaterialTheme.typography.headlineMedium,
     delayPerWord: Long = 100L
 ) {
+
+    val exitAnimDelay = 500
+
     val wordsWithSpaces = remember(text) {
         // Regex para dividir y conservar los espacios
         Regex("""\S+\s*""").findAll(text).map { it.value }.toList()
@@ -85,6 +89,7 @@ fun AnimatedText(
     val visibleStates = remember { mutableStateListOf<Boolean>() }
 
     LaunchedEffect(text) {
+        delay(exitAnimDelay.milliseconds)
         visibleStates.clear()
         repeat(wordsWithSpaces.size) { visibleStates.add(false) }
 
@@ -101,16 +106,18 @@ fun AnimatedText(
             val isHighlighted = index in highlightWordPositions
             val color = if (isHighlighted) highlightColor else defaultColor
 
-            AnimatedVisibility(
+            AnimatedContent(
                 visible = visibleStates.getOrNull(index) == true,
-                enter = fadeIn(animationSpec = tween(500)) +
-                        slideInVertically(initialOffsetY = { it / 2 }, animationSpec = tween(500))
-            ) {
-                Text(
-                    text = word,
-                    style = textStyle.copy(color = color)
-                )
-            }
+                enterAnim = fadeIn(animationSpec = tween(500)) +
+                        slideInVertically(initialOffsetY = { it / 2 }, animationSpec = tween(500)),
+                exitAnim = fadeOut(animationSpec = tween(exitAnimDelay)),
+                content = {
+                    Text(
+                        text = word,
+                        style = textStyle.copy(color = color)
+                    )
+                }
+            )
         }
     }
 }
