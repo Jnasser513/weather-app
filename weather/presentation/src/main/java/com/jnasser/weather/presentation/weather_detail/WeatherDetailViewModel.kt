@@ -44,9 +44,8 @@ class WeatherDetailViewModel(
 
     fun onAction(action: WeatherDetailAction) {
         when(action) {
-            WeatherDetailAction.OnChangeFilterToDaily -> TODO()
-            WeatherDetailAction.OnChangeFilterToHourly -> TODO()
             WeatherDetailAction.OnGetTemperatureUnits -> getTemperatureUnits()
+            is WeatherDetailAction.OnSelectToggle -> state = state.copy(forecastSelection = action.selection)
             is WeatherDetailAction.OnGetWeatherDetail -> getWeatherDetail(action.lat, action.lon)
             is WeatherDetailAction.OnFollowUp -> {}
             is WeatherDetailAction.OnRemoveFollow -> TODO()

@@ -22,13 +22,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.presentation.designsystem.components.animations.AnimatedContent
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
+import com.jnasser.weather.domain.repositories.ForecastSelection
 import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_detail.model.ForecastDataUi
 
 @Composable
 fun ForecastContainer(
     modifier: Modifier = Modifier,
-    forecastList: List<ForecastDataUi>
+    forecastList: List<ForecastDataUi>,
+    selectedToggle: ForecastSelection = ForecastSelection.DAILY,
+    onDailyClick: () -> Unit,
+    onHourlyClick: () -> Unit
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -61,12 +65,9 @@ fun ForecastContainer(
                         )
                     )
                     ForecastOptions(
-                        onDailyClick = {
-
-                        },
-                        onHourlyClick = {
-
-                        }
+                        selectedToggle = selectedToggle,
+                        onDailyClick = onDailyClick,
+                        onHourlyClick = onHourlyClick
                     )
                 }
                 Spacer(Modifier.height(10.dp))
@@ -106,7 +107,9 @@ private fun ForecastContainerPreview() {
                     minTemperature = "56",
                     progress = 0.91f
                 )
-            )
+            ),
+            onDailyClick = {},
+            onHourlyClick = {}
         )
     }
 }

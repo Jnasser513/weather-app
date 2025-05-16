@@ -2,12 +2,12 @@ package com.jnasser.weather.presentation.weather_detail
 
 import com.jnasser.core.domain.city.CityDetail
 import com.jnasser.core.domain.enums.WindUnitsEnum
+import com.jnasser.weather.domain.repositories.ForecastSelection
 import java.time.DayOfWeek
 
 sealed interface WeatherDetailAction {
     data object OnGoHome: WeatherDetailAction
-    data object OnChangeFilterToDaily: WeatherDetailAction
-    data object OnChangeFilterToHourly: WeatherDetailAction
+    data class OnSelectToggle(val selection: ForecastSelection): WeatherDetailAction
     data object OnMapDetail: WeatherDetailAction
     data object OnGetTemperatureUnits: WeatherDetailAction
     data class OnGetWeatherDetail(val lat: Double, val lon: Double): WeatherDetailAction

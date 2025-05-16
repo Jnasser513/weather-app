@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jnasser.core.domain.constants.DefaultValues.EMPTY_STRING
 import com.jnasser.core.domain.city.CityDetail
 import com.jnasser.core.domain.util.DateUtils
 import com.jnasser.core.domain.weather.model.WeatherDetail
@@ -37,6 +36,7 @@ import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBarCon
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.core.presentation.ui.utils.extensions.getLocalizedWindDescription
 import com.jnasser.core.presentation.ui.utils.extensions.getWindDirectionFromDegrees
+import com.jnasser.weather.domain.repositories.ForecastSelection
 import com.jnasser.weather.presentation.R
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailAction
 import com.jnasser.weather.presentation.weather_detail.WeatherDetailState
@@ -44,9 +44,7 @@ import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
 import com.jnasser.weather.presentation.weather_detail.composables.forecast.ForecastContainer
 import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
 import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
-import com.jnasser.weather.presentation.weather_detail.model.WindDataUi
 import com.jnasser.weather.presentation.weather_detail.toForecastDataUi
-import com.jnasser.weather.presentation.weather_detail.toWindDataUi
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -65,7 +63,8 @@ fun WeatherDetailScreenRoot(
 
 @Composable
 fun WeatherDetailScreen(
-    state: WeatherDetailState, onAction: (WeatherDetailAction) -> Unit
+    state: WeatherDetailState,
+    onAction: (WeatherDetailAction) -> Unit
 ) {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -154,7 +153,14 @@ fun WeatherDetailScreen(
                     }
 
                     ForecastContainer(
-                        forecastList = forecastList.orEmpty()
+                        forecastList = forecastList.orEmpty(),
+                        selectedToggle = state.forecastSelection,
+                        onDailyClick = {
+                            onAction(WeatherDetailAction.OnSelectToggle(ForecastSelection.DAILY))
+                        },
+                        onHourlyClick = {
+                            onAction(WeatherDetailAction.OnSelectToggle(ForecastSelection.HOURLY))
+                        }
                     )
                     Spacer(Modifier.height(30.dp))
                 },
