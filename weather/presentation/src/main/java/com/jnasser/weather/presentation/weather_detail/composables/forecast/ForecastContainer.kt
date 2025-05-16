@@ -32,7 +32,8 @@ fun ForecastContainer(
     forecastList: List<ForecastDataUi>,
     selectedToggle: ForecastSelection = ForecastSelection.DAILY,
     onDailyClick: () -> Unit,
-    onHourlyClick: () -> Unit
+    onHourlyClick: () -> Unit,
+    selectedItem: (Long) -> Unit
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -75,7 +76,10 @@ fun ForecastContainer(
         )
 
         if(showForecastList) {
-            ForecastList(forecastList = forecastList)
+            ForecastList(
+                forecastList = forecastList,
+                selectedItem = selectedItem
+            )
         }
     }
 }
@@ -87,6 +91,7 @@ private fun ForecastContainerPreview() {
         ForecastContainer(
             forecastList = listOf(
                 ForecastDataUi(
+                    dt = 1,
                     title = "Today",
                     icon = "https://openweathermap.org/img/wn/10d@2x.png",
                     maxTemperature = "48",
@@ -94,6 +99,7 @@ private fun ForecastContainerPreview() {
                     progress = 0.25f
                 ),
                 ForecastDataUi(
+                    dt = 2,
                     title = "Thu",
                     icon = "https://openweathermap.org/img/wn/10d@2x.png",
                     maxTemperature = "48",
@@ -101,6 +107,7 @@ private fun ForecastContainerPreview() {
                     progress = 0.48f
                 ),
                 ForecastDataUi(
+                    dt = 3,
                     title = "Fri",
                     icon = "https://openweathermap.org/img/wn/10d@2x.png",
                     maxTemperature = "48",
@@ -108,6 +115,7 @@ private fun ForecastContainerPreview() {
                     progress = 0.91f
                 )
             ),
+            selectedItem = {},
             onDailyClick = {},
             onHourlyClick = {}
         )

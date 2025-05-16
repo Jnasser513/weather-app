@@ -8,12 +8,12 @@ import java.util.Locale
 
 object DateUtils {
 
-    fun getDayNameFromTimeStamp(timeStampSeconds: Long): String {
+    fun getDayNameFromTimeStamp(timeStampSeconds: Long, style: TextStyle = TextStyle.SHORT_STANDALONE): String {
         val date = Instant.ofEpochSecond(timeStampSeconds)
             .atZone(ZoneId.systemDefault())
             .dayOfWeek
 
-        return date.getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
+        return date.getDisplayName(style, Locale.getDefault())
     }
 
     fun isToday(timeStampSeconds: Long): Boolean {

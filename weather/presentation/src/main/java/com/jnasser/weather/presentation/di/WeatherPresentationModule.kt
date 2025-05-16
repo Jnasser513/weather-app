@@ -1,5 +1,6 @@
 package com.jnasser.weather.presentation.di
 
+import com.jnasser.core.domain.usecases.ConvertWindSpeedUseCase
 import com.jnasser.core.domain.usecases.GetTemperatureUnitsUseCase
 import com.jnasser.core.domain.usecases.GetWeatherDetailUseCase
 import com.jnasser.core.domain.usecases.GetWindUnitUseCase
@@ -19,4 +20,5 @@ var weatherPresentationModule = module {
     singleOf(::GetTemperatureUnitsUseCase)
     singleOf(::UpdateWindUnitsUseCase)
     singleOf(::GetWindUnitUseCase)
+    singleOf(::ConvertWindSpeedUseCase)
 }

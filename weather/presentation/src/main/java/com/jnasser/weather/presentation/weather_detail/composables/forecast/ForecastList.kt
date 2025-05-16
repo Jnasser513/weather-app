@@ -28,7 +28,8 @@ import kotlinx.coroutines.delay
 fun ForecastList(
     modifier: Modifier = Modifier,
     forecastList: List<ForecastDataUi>,
-    delayPerItem: Long = 100L
+    delayPerItem: Long = 100L,
+    selectedItem: (Long) -> Unit
 ) {
     val visibleStates = remember { mutableStateListOf<Boolean>() }
 
@@ -63,6 +64,7 @@ fun ForecastList(
                     isSelected = selectedIndex == index
                 ) {
                     selectedIndex = index
+                    selectedItem(item.dt)
                 }
             }
         }

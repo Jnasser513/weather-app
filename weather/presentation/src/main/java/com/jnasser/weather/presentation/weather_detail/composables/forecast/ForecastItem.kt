@@ -103,6 +103,7 @@ private fun ForecastItemPreview() {
             isSelected = true,
             id = 1,
             forecastDataUi = ForecastDataUi(
+                dt = 1,
                 title = "Today",
                 icon = "https://openweathermap.org/img/wn/10d@2x.png",
                 maxTemperature = "48",

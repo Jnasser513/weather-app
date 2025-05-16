@@ -97,7 +97,7 @@ fun WeatherContentWithProgress(
 
             if(showCircle) drawCircle(
                 color = circleColor,
-                radius = 3.dp.toPx(),
+                radius = 3.5.dp.toPx(),
                 center = Offset(circleX, circleY)
             )
 

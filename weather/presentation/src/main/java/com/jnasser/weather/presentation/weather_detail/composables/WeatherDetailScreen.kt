@@ -44,7 +44,7 @@ import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
 import com.jnasser.weather.presentation.weather_detail.composables.forecast.ForecastContainer
 import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
 import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
-import com.jnasser.weather.presentation.weather_detail.toForecastDataUi
+import com.jnasser.weather.presentation.weather_detail.model.toForecastDataUi
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -122,15 +122,22 @@ fun WeatherDetailScreen(
                 .padding(padding),
             items = listOf(
                 {
-                    val text = stringResource(
-                        R.string.temperature_description,
+                    val text = if(state.weatherSelection.isCurrent) stringResource(
+                        R.string.temperature_today_description,
                         "${state.weatherSelection.currentTemp}${state.temperatureUnits.symbol}",
                         state.weatherSelection.weatherDescription.orEmpty(),
                         "${state.weatherSelection.temperatureFeelsLike}${state.temperatureUnits.symbol}"
+                    ) else stringResource(
+                        R.string.temperature_description,
+                        "${state.weatherSelection.maxTemp}${state.temperatureUnits.symbol}",
+                        "${state.weatherSelection.minTemp}${state.temperatureUnits.symbol}",
+                        state.weatherSelection.day
                     )
                     AnimatedText(
                         text = text,
-                        highlightWordPositions = listOf(2, 4, 5)
+                        highlightWordPositions =
+                            if(state.weatherSelection.isCurrent) listOf(2, 4, 5)
+                            else listOf()
                     )
                     Spacer(Modifier.height(40.dp))
                 },
@@ -160,6 +167,9 @@ fun WeatherDetailScreen(
                         },
                         onHourlyClick = {
                             onAction(WeatherDetailAction.OnSelectToggle(ForecastSelection.HOURLY))
+                        },
+                        selectedItem = { time ->
+                            onAction(WeatherDetailAction.OnSelectForecast(time))
                         }
                     )
                     Spacer(Modifier.height(30.dp))

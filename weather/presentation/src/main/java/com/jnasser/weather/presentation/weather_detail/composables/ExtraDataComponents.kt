@@ -39,7 +39,7 @@ fun ExtraDataComponents(
     ) {
         AnimatedContent(
             visible = visible,
-            transition = fadeIn(
+            enterAnim = fadeIn(
                 animationSpec = tween(
                     durationMillis = 500,
                     easing = FastOutSlowInEasing
