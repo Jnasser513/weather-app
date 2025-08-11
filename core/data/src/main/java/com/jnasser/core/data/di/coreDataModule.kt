@@ -5,12 +5,16 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.google.android.libraries.places.api.Places
 import com.jnasser.core.data.BuildConfig
+import com.jnasser.core.data.datastore.GCPPlacesDataSource
 import com.jnasser.core.data.weather_detail.networking.HttpClientFactory
 import com.jnasser.core.data.datastore.SettingsDataSourceImpl
+import com.jnasser.core.data.repositories.OfflineFirstCityRepository
 import com.jnasser.core.data.weather_detail.networking.coroutines.DispatcherProviderImpl
 import com.jnasser.core.data.weather_detail.networking.weather.repositories.OfflineFirstWeatherRepository
+import com.jnasser.core.domain.city.datasources.RemotePlacesDataSource
 import com.jnasser.core.domain.repositories.SettingsRepository
 import com.jnasser.core.domain.coroutines.DispatcherProvider
+import com.jnasser.core.domain.repositories.CityRepository
 import com.jnasser.core.domain.weather.repositories.WeatherRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
@@ -40,6 +44,10 @@ val coreDataModule = module {
 
     // Repositories
     singleOf(::OfflineFirstWeatherRepository).bind<WeatherRepository>()
+    singleOf(::OfflineFirstCityRepository).bind<CityRepository>()
+
+    // DataSources
+    singleOf(::GCPPlacesDataSource).bind<RemotePlacesDataSource>()
 
     // Keys
     single<String> {
