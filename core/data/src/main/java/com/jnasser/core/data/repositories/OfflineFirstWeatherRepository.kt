@@ -24,10 +24,7 @@ class OfflineFirstWeatherRepository(
         lon: Double,
         units: String
     ): Result<WeatherDetail, DataError> {
-        return when (val result = remoteWeatherDetailDataSource.getWeatherDetail(lat, lon, units)) {
-            is Result.Error -> Result.Error(result.error)
-            is Result.Success -> Result.Success(result.data)
-        }
+        return remoteWeatherDetailDataSource.getWeatherDetail(lat, lon, units)
     }
 
     override suspend fun upsertWeatherDetail(

@@ -1,7 +1,6 @@
 package com.jnasser.weatherapp
 
 import android.app.Application
-import android.content.Context
 import com.jnasser.core.data.di.coreDataModule
 import com.jnasser.weather.network.datasources.di.weatherNetworkModule
 import com.jnasser.weather.presentation.di.weatherPresentationModule
@@ -28,10 +27,5 @@ class WeatherApp: Application() {
                 weatherNetworkModule
             )
         }
-    }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-
     }
 }
