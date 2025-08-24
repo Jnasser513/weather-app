@@ -3,4 +3,6 @@
     <string name="follow_up">Follow up</string>
     <string name="unfollow_up">Unfollow</string>
     <string name="add_city">Agregar ciudad</string>
+    <string name="content_fab">Fab Icon</string>
+    <string name="search">Buscar</string>
 </resources>

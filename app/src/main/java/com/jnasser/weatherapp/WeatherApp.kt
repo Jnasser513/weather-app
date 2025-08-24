@@ -1,6 +1,7 @@
 package com.jnasser.weatherapp
 
 import android.app.Application
+import com.example.city.presentation.city_saved_list.di.cityPresentationModule
 import com.jnasser.core.data.di.coreDataModule
 import com.jnasser.weather.network.datasources.di.weatherNetworkModule
 import com.jnasser.weather.presentation.di.weatherPresentationModule
@@ -24,7 +25,8 @@ class WeatherApp: Application() {
             modules(
                 weatherPresentationModule,
                 coreDataModule,
-                weatherNetworkModule
+                weatherNetworkModule,
+                cityPresentationModule
             )
         }
     }

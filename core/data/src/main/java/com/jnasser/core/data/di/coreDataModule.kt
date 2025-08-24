@@ -56,7 +56,7 @@ val coreDataModule = module {
 
     // Places SDK initialization
     single {
-        val apiKey = BuildConfig.PLACES_API_KEY
+        val apiKey = "AIzaSyDSy1FxhndrTEsAxi1UVFy03tWAbfi7MJU"
         if(apiKey.isEmpty() || apiKey == "DEFAULT_API_KEY")
             Timber.tag("Places API").e("No api key")
 
