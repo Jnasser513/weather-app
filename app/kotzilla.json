@@ -1,0 +1,11 @@
+{
+  "sdkVersion": "1.2.2",
+  "keys": [
+    {
+      "appId": "63d8537e-082e-4c6c-be2d-29eb1a53d36e",
+      "applicationPackageName": "com.jnasser.weatherapp",
+      "keyId": "0199b2cb-fd05-78c4-abb3-95102cecb721",
+      "apiKey": "ktz-sdk-it35L99inI0shS2KqqCONGV6fx-rdz5aIwsbPTxc5FM"
+    }
+  ]
+}

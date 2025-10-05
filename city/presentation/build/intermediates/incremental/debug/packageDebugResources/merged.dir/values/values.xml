@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detail">Detalles</string>
+    <string name="save">Añadir</string>
+    <string name="saved_cities">Ciudades guardades</string>
+</resources>

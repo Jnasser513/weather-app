@@ -78,6 +78,9 @@ playServicesTime = "16.0.1"
 places = "4.4.1"
 mapsPlatformSecrets = "2.0.1"
 
+# Analysing
+kotzilla = "1.2.2"
+
 # Project Versions
 projectApplicationId = "com.jnasser.weatherapp"
 projectVersionName = "1.0"
@@ -172,6 +175,9 @@ google-android-gms-play-services-location = { module = "com.google.android.gms:p
 # GCP
 google-places = { module = "com.google.android.libraries.places:places", version.ref = "places" }
 
+# Analysing
+kotzilla = { group = "io.kotzilla", name = "kotzilla-sdk-compose", version.ref = "kotzilla" }
+
 # Test dependencies
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -197,6 +203,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 mapsplatfor-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "mapsPlatformSecrets" }
+kotzilla = { id = "io.kotzilla.kotzilla-plugin", version.ref = "kotzilla" }
 
 # Convention Plugins
 weatherapp-android-application = { id = "weatherapp.android.application", version = "unspecified" }
