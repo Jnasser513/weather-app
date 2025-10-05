@@ -20,9 +20,11 @@ fun CitySearchList(
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         items(cityList) { item ->
-            CitySearchCard(item) {
-
-            }
+            CitySearchCard(
+                city = item,
+                onDetailClick = {},
+                onSaveClick = {}
+            )
         }
     }
 }

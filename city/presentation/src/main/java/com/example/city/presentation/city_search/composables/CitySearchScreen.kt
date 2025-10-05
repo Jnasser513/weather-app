@@ -19,6 +19,7 @@ import com.example.city.presentation.city_search.CitySearchAction
 import com.example.city.presentation.city_search.CitySearchEvents
 import com.example.city.presentation.city_search.CitySearchViewModel
 import com.example.city.presentation.city_search.CitySearchViewState
+import com.example.city.presentation.city_search.model.CitySearchUI
 import com.jnasser.core.presentation.designsystem.components.WeatherAppScaffold
 import com.jnasser.core.presentation.designsystem.components.WeatherAppSearchBar
 import com.jnasser.core.presentation.designsystem.components.WeatherAppSearchBarConfig
@@ -31,11 +32,16 @@ fun CitySearchScreenRoot(
     viewModel: CitySearchViewModel = koinViewModel(),
     onReturn: () -> Unit
 ) {
-    val context= LocalContext.current
+    val context = LocalContext.current
 
     ObserveAsEvents(viewModel.events) { event ->
-        when(event) {
-            is CitySearchEvents.Error -> Toast.makeText(context, event.error.asString(context), Toast.LENGTH_SHORT).show()
+        when (event) {
+            is CitySearchEvents.Error -> Toast.makeText(
+                context,
+                event.error.asString(context),
+                Toast.LENGTH_SHORT
+            ).show()
+
             CitySearchEvents.OnReturn -> onReturn()
         }
     }
@@ -88,6 +94,29 @@ fun CitySearchScreen(
 @Composable
 private fun CitySearchScreenPreview() {
     WeatherAppTheme {
+        CitySearchScreen(
+            state = CitySearchViewState(
+                suggestions = listOf(
+                    CitySearchUI(
+                        "1",
+                        "San Salvador",
+                        "El Salvador"
+                    ),
+                    CitySearchUI(
+                        "2",
+                        "San Marino",
+                        "Islas"
+                    ),
+                    CitySearchUI(
+                        "1",
+                        "San Sebastian",
+                        "Espana"
+                    )
+                )
+            ),
+            onAction = {
 
+            }
+        )
     }
 }
