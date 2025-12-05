@@ -13,3 +13,5 @@
 /captures
 .externalNativeBuild
 .cxx
+app/kotzilla.json
+app/src/main/assets/kotzilla.key
