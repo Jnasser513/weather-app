@@ -67,9 +67,9 @@ work = "2.10.0"
 securityCryptoKtx = "1.1.0-alpha06"
 
 # Network
-ktor = "2.3.8"
-ktorClientLogging = "2.3.8"
-ktorServerCallLogging = "2.3.7"
+ktor = "3.0.3"
+ktorClientLogging = "3.0.3"
+ktorServerCallLogging = "3.0.3"
 
 # Play Services
 playServicesTime = "16.0.1"
