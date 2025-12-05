@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.weatherapp.android.application.compose)
     alias(libs.plugins.weatherapp.jvm.ktor)
+    alias(libs.plugins.kotzilla)
 }
 
 android {
@@ -14,6 +15,10 @@ android {
 gradle.startParameter.excludedTaskNames.addAll(
     gradle.startParameter.taskNames.filter { it.contains("testClasses") }
 )
+
+kotzilla {
+    composeInstrumentation = true
+}
 
 dependencies {
 
@@ -48,6 +53,9 @@ dependencies {
 
     // Koin
     implementation(libs.bundles.koin)
+
+    // Kotzilla
+    implementation(libs.kotzilla)
 
     // Modules
     implementation(projects.core.presentation.designsystem)

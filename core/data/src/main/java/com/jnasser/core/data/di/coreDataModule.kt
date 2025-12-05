@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.net.PlacesClient
 import com.jnasser.core.data.BuildConfig
 import com.jnasser.core.data.datastore.GCPPlacesDataSource
 import com.jnasser.core.data.weather_detail.networking.HttpClientFactory
@@ -27,7 +28,7 @@ private const val SHARED_DATA_STORE_PREFERENCE_NAME = "weatherapp.settings.prefe
 
 val coreDataModule = module {
     // Network
-    single {
+    single(createdAtStart = true) { // Allows Create HttpClient in background
         HttpClientFactory().build()
     }
 
@@ -55,7 +56,7 @@ val coreDataModule = module {
     }
 
     // Places SDK initialization
-    single {
+    single<PlacesClient> {
         val apiKey = BuildConfig.PLACES_API_KEY
         if(apiKey.isEmpty() || apiKey == "DEFAULT_API_KEY")
             Timber.tag("Places API").e("No api key")
