@@ -43,4 +43,5 @@
     </string-array>
 
     <string name="wind_direction_no_info">--</string>
+    <string name="save">Añadir</string>
 </resources>

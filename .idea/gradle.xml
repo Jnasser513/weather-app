@@ -25,6 +25,10 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
+            <option value="$PROJECT_DIR$/city" />
+            <option value="$PROJECT_DIR$/city/data" />
+            <option value="$PROJECT_DIR$/city/domain" />
+            <option value="$PROJECT_DIR$/city/presentation" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/data" />
             <option value="$PROJECT_DIR$/core/database" />
@@ -40,7 +44,6 @@
             <option value="$PROJECT_DIR$/weather/presentation" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

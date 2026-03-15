@@ -69,4 +69,5 @@ dependencies {
     implementation(projects.weather.presentation)
     implementation(projects.weather.location)
     implementation(projects.weather.network)
+    implementation(projects.city.presentation)
 }

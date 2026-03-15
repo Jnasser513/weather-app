@@ -1,4 +1,4 @@
-package com.jnasser.weather.presentation.weather_saved_list.model
+package com.example.city.presentation.city_saved_list.model
 
 
 data class CitySummary(

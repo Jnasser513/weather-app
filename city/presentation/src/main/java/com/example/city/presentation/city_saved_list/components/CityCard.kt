@@ -1,4 +1,4 @@
-package com.jnasser.weather.presentation.weather_saved_list.components
+package com.example.city.presentation.city_saved_list.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jnasser.weather.presentation.weather_saved_list.model.CitySummary
+import com.example.city.presentation.city_saved_list.model.CitySummary
 
 @Composable
 fun CityCard(city: CitySummary, onClick: () -> Unit) {
