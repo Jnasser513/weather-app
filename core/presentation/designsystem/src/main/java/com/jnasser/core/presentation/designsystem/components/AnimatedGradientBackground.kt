@@ -5,16 +5,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.core.presentation.designsystem.util.meshGradient
 
 @Composable
 fun AnimatedGradientBackground(
     hasToolBar: Boolean = true,
+    isLoading: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val points = listOf(
@@ -81,13 +84,18 @@ fun AnimatedGradientBackground(
             .meshGradient(
                 points = points,
                 resolutionX = 32,
-                resolutionY = 32,
-                showPoints = false
+                resolutionY = 32
             )
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            if(isLoading) Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                WeatherAppContainedLoading(size = 50.dp)
+            }
             content()
         }
     }
@@ -99,7 +107,7 @@ fun AnimatedGradientBackground(
 @Composable
 private fun AnimatedGradientBackgroundPreview() {
     WeatherAppTheme {
-        AnimatedGradientBackground {
+        AnimatedGradientBackground(isLoading = true) {
 
         }
     }

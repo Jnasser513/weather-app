@@ -1,7 +1,16 @@
 package com.jnasser.weatherapp.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -9,17 +18,25 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.city.presentation.city_saved_list.components.CitySavedListScreenRoot
 import com.example.city.presentation.city_search.composables.CitySearchScreenRoot
+import com.jnasser.weather.presentation.weather_detail.composables.WeatherDetailScreenRoot
 import kotlinx.serialization.Serializable
 
 @Serializable data object CityGraphRoute
+@Serializable data object WeatherGraphRoute
 
 @Composable
 fun NavigationRoot(navController: NavHostController) {
-    NavHost(
-        navController = navController,
-        startDestination = CityGraphRoute
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        cityGraph(navController)
+        NavHost(
+            navController = navController,
+            startDestination = CityGraphRoute
+        ) {
+            cityGraph(navController)
+            weatherGraph(navController)
+        }
     }
 }
 
@@ -30,7 +47,14 @@ private fun NavGraphBuilder.cityGraph(navController: NavHostController) {
     navigation<CityGraphRoute>(
         startDestination = CitySavedListRoute
     ) {
-        composable<CitySavedListRoute> {
+        composable<CitySavedListRoute>(
+            enterTransition = {
+                fadeIn(animationSpec = tween(250))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(250))
+            }
+        ) {
             CitySavedListScreenRoot(
                 onCityDetail = { id ->
                     // TODO("Navigate to city detail")
@@ -39,10 +63,59 @@ private fun NavGraphBuilder.cityGraph(navController: NavHostController) {
             )
         }
 
-        composable<CitySearchRoute> {
+        composable<CitySearchRoute>(
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(300)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(300)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(300)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(300)
+                )
+            }
+        ) {
             CitySearchScreenRoot(
+                onCityDetail = {
+                    navController.navigate(WeatherGraphRoute)
+                },
                 onReturn = {
                     navController.navigateUp()
+                }
+            )
+        }
+    }
+}
+
+@Serializable data object WeatherDetailRoute
+
+private fun NavGraphBuilder.weatherGraph(navController: NavHostController) {
+    navigation<WeatherGraphRoute>(
+        startDestination = WeatherDetailRoute
+    ) {
+        composable<WeatherDetailRoute> {
+            WeatherDetailScreenRoot(
+                goHome = {
+                    navController.navigate(CitySavedListRoute) {
+                        popUpTo<CitySavedListRoute> {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }

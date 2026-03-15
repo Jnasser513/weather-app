@@ -11,7 +11,7 @@ import com.jnasser.core.data.weather_detail.networking.HttpClientFactory
 import com.jnasser.core.data.datastore.SettingsDataSourceImpl
 import com.jnasser.core.data.repositories.OfflineFirstCityRepository
 import com.jnasser.core.data.weather_detail.networking.coroutines.DispatcherProviderImpl
-import com.jnasser.core.data.weather_detail.networking.weather.repositories.OfflineFirstWeatherRepository
+import com.jnasser.core.data.repositories.OfflineFirstWeatherRepository
 import com.jnasser.core.domain.city.datasources.RemotePlacesDataSource
 import com.jnasser.core.domain.repositories.SettingsRepository
 import com.jnasser.core.domain.coroutines.DispatcherProvider
