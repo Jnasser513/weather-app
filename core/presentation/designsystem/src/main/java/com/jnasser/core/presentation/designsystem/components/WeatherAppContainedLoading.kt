@@ -3,12 +3,9 @@ package com.jnasser.core.presentation.designsystem.components
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.LoadingIndicatorDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -16,21 +13,21 @@ import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun WeatherAppLoading(
+fun WeatherAppContainedLoading(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onSurface,
     size: Dp = 30.dp
 ) {
-    LoadingIndicator(
+    ContainedLoadingIndicator(
         modifier = modifier.size(size),
-        color = color
+        containerColor = LoadingIndicatorDefaults.containedIndicatorColor,
+        indicatorColor = LoadingIndicatorDefaults.indicatorColor
     )
 }
 
 @Preview
 @Composable
-private fun WeatherAppLoadingPreview() {
+private fun WeatherAppContainedLoadingPreview() {
     WeatherAppTheme {
-        WeatherAppLoading()
+        WeatherAppContainedLoading()
     }
 }

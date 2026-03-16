@@ -1,3 +1,0 @@
-int string detail 0x0
-int string save 0x0
-int string saved_cities 0x0

@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -57,11 +58,11 @@ fun CitySearchCard(
         label = "iconRotation"
     )
 
-    Card(shape = RoundedCornerShape(20.dp),
+    Card(
+        onClick = { expanded = !expanded },
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF3A3A4D)),
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { expanded = !expanded }
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
@@ -74,7 +75,8 @@ fun CitySearchCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    city.place,
+                    modifier = Modifier.weight(1f),
+                    text = city.place,
                     color = WeatherWhite,
                     fontSize = 18.sp
                 )

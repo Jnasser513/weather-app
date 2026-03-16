@@ -11,11 +11,13 @@ import com.jnasser.core.domain.usecases.GetWeatherDetailUseCase
 import com.jnasser.core.domain.usecases.GetWindUnitUseCase
 import com.jnasser.core.domain.usecases.UpdateWindUnitsUseCase
 import com.jnasser.core.domain.util.DateUtils
+import com.jnasser.core.domain.util.withMinimumDuration
 import com.jnasser.core.presentation.ui.utils.asUiText
 import com.jnasser.weather.domain.repositories.ForecastSelection
 import com.jnasser.weather.presentation.weather_detail.model.WeatherDataUi
 import com.jnasser.weather.presentation.weather_detail.model.toWeatherDataUi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -84,11 +86,15 @@ class WeatherDetailViewModel(
     private fun getWeatherDetail(lat: Double, lon: Double) {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
-            val result = getWeatherDetailUseCase(lat, lon)
-            state = state.copy(isLoading = false)
 
-            when(result) {
-                is Result.Error -> eventChannel.send(WeatherDetailEvent.Error(result.error.asUiText()))
+            val result = withMinimumDuration {
+                getWeatherDetailUseCase(lat, lon)
+            }
+
+            when (result) {
+                is Result.Error ->
+                    eventChannel.send(WeatherDetailEvent.Error(result.error.asUiText()))
+
                 is Result.Success -> {
                     state = state.copy(
                         weather = result.data,
@@ -96,6 +102,8 @@ class WeatherDetailViewModel(
                     )
                 }
             }
+
+            state = state.copy(isLoading = false)
         }
     }
 }

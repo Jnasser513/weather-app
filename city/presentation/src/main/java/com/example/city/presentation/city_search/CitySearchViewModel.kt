@@ -27,6 +27,7 @@ class CitySearchViewModel(
         when(action) {
             CitySearchAction.OnCancel -> viewModelScope.launch { eventChannel.send(CitySearchEvents.OnReturn) }
             is CitySearchAction.OnSearch -> searchCity(action.query)
+            else -> Unit
         }
     }
 
