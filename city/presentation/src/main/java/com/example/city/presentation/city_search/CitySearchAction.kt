@@ -4,5 +4,5 @@ sealed interface CitySearchAction {
     data class OnSearch(val query: String): CitySearchAction
     data object OnCancel: CitySearchAction
     //data class OnSaveCity(val city: CityDetail)
-    data class OnCityDetails(val lat: Double, val lon: Double)
+    data class OnCityDetail(val lat: Double, val lon: Double): CitySearchAction
 }

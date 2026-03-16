@@ -98,7 +98,7 @@ fun WindContainer(
                     Image(
                         modifier = Modifier
                             .fillMaxSize()
-                            .alpha(0.2f),
+                            .alpha(0.3f),
                         painter = painterResource(R.drawable.map),
                         contentDescription = stringResource(R.string.map_image),
                         contentScale = ContentScale.FillBounds

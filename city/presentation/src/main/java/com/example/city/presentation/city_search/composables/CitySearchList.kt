@@ -12,7 +12,9 @@ import com.example.city.presentation.city_search.model.CitySearchUI
 @Composable
 fun CitySearchList(
     modifier: Modifier = Modifier,
-    cityList: List<CitySearchUI>
+    cityList: List<CitySearchUI>,
+    onDetailClick: (CitySearchUI) -> Unit,
+    onSaveClick: (CitySearchUI) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -22,8 +24,8 @@ fun CitySearchList(
         items(cityList) { item ->
             CitySearchCard(
                 city = item,
-                onDetailClick = {},
-                onSaveClick = {}
+                onDetailClick = { onDetailClick(item) },
+                onSaveClick = { onSaveClick(item) }
             )
         }
     }

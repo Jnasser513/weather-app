@@ -49,11 +49,12 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WeatherDetailScreenRoot(
-    viewModel: WeatherDetailViewModel = koinViewModel()
+    viewModel: WeatherDetailViewModel = koinViewModel(),
+    goHome: () -> Unit
 ) {
     WeatherDetailScreen(state = viewModel.state, onAction = { action ->
         when (action) {
-            WeatherDetailAction.OnGoHome -> TODO()
+            WeatherDetailAction.OnGoHome -> goHome()
             WeatherDetailAction.OnMapDetail -> TODO()
             else -> Unit
         }
@@ -72,21 +73,22 @@ fun WeatherDetailScreen(
     var showFab by remember { mutableStateOf(false) }
 
     WeatherAppScaffold(
+        isLoading = state.isLoading,
         topApBar = {
             WeatherTopAppBar(
                 config = WeatherTopAppBarConfig(
                     title = "San Francisco, CA",
                     centerTitle = true,
-                    navigationIcon = WeatherTopAppBar.NavigationIcon.Custom(icon = Icons.Outlined.Home,
-                        click = {
-
-                        }),
+                    navigationIcon = WeatherTopAppBar.NavigationIcon.Custom(
+                        icon = Icons.Outlined.Home,
+                        click = { onAction(WeatherDetailAction.OnGoHome) }
+                    ),
                     actions = listOf(
-                        WeatherTopAppBar.Action(text = stringResource(R.string.map),
+                        WeatherTopAppBar.Action(
+                            text = stringResource(R.string.map),
                             icon = com.jnasser.core.presentation.designsystem.theme.Icons.Map,
-                            onClick = {
-
-                            })
+                            onClick = {  }
+                        )
                     ),
 
                     scrollBehavior = scrollBehavior
@@ -95,8 +97,9 @@ fun WeatherDetailScreen(
         },
         scrollBehavior = scrollBehavior,
         floatingActionButton = {
-            if(showFab) {
-                WeatherAppAnimatedSwipeableButton(buttonText = stringResource(com.jnasser.core.presentation.designsystem.R.string.follow_up),
+            if (showFab) {
+                WeatherAppAnimatedSwipeableButton(
+                    buttonText = stringResource(com.jnasser.core.presentation.designsystem.R.string.follow_up),
                     buttonTextAlternative = stringResource(com.jnasser.core.presentation.designsystem.R.string.unfollow_up),
                     draggableIconActive = {
                         Icon(
@@ -122,7 +125,7 @@ fun WeatherDetailScreen(
                 .padding(padding),
             items = listOf(
                 {
-                    val text = if(state.weatherSelection.isCurrent) stringResource(
+                    val text = if (state.weatherSelection.isCurrent) stringResource(
                         R.string.temperature_today_description,
                         "${state.weatherSelection.currentTemp}${state.temperatureUnits.symbol}",
                         state.weatherSelection.weatherDescription.orEmpty(),
@@ -136,7 +139,7 @@ fun WeatherDetailScreen(
                     AnimatedText(
                         text = text,
                         highlightWordPositions =
-                            if(state.weatherSelection.isCurrent) listOf(2, 4, 5)
+                            if (state.weatherSelection.isCurrent) listOf(2, 4, 5)
                             else listOf()
                     )
                     Spacer(Modifier.height(40.dp))
@@ -144,7 +147,7 @@ fun WeatherDetailScreen(
                 {
                     val today = state.weather.daily?.first() { DateUtils.isToday(it.dt) }
                     val forecastList = state.weather.daily?.map { forecast ->
-                        if(forecast == today) {
+                        if (forecast == today) {
                             val minTemp = forecast.temp.min ?: 0f
                             val maxTemp = forecast.temp.max ?: 0f
                             val currentTemp = state.weather.current?.temp
@@ -154,9 +157,12 @@ fun WeatherDetailScreen(
                             } else {
                                 0f
                             }
-                            forecast.toForecastDataUi(state.temperatureUnits.symbol, progress, currentTemp)
-                        }
-                        else forecast.toForecastDataUi(state.temperatureUnits.symbol)
+                            forecast.toForecastDataUi(
+                                state.temperatureUnits.symbol,
+                                progress,
+                                currentTemp
+                            )
+                        } else forecast.toForecastDataUi(state.temperatureUnits.symbol)
                     }
 
                     ForecastContainer(
@@ -175,8 +181,10 @@ fun WeatherDetailScreen(
                     Spacer(Modifier.height(30.dp))
                 },
                 {
-                    val windTitle = context.getLocalizedWindDescription(state.weatherSelection.windSpeed)
-                    val windDirection = context.getWindDirectionFromDegrees(state.weatherSelection.windDeg)
+                    val windTitle =
+                        context.getLocalizedWindDescription(state.weatherSelection.windSpeed)
+                    val windDirection =
+                        context.getWindDirectionFromDegrees(state.weatherSelection.windDeg)
                     WindContainer(
                         windDataUi = state.weatherSelection.windData.copy(
                             title = windTitle,
@@ -212,6 +220,18 @@ private fun WeatherDetailScreenPreview() {
         WeatherDetailScreen(
             WeatherDetailState(
                 isLoading = false, weather = WeatherDetail()
+            )
+        ) { }
+    }
+}
+
+@Preview
+@Composable
+private fun WeatherDetailLoadingScreenPreview() {
+    WeatherAppTheme {
+        WeatherDetailScreen(
+            WeatherDetailState(
+                isLoading = true, weather = WeatherDetail()
             )
         ) { }
     }
