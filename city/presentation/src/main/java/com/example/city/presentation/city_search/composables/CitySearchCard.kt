@@ -74,7 +74,7 @@ fun CitySearchCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "${city.primaryText}, ${city.secondaryText}",
+                    city.place,
                     color = WeatherWhite,
                     fontSize = 18.sp
                 )
@@ -136,8 +136,7 @@ private fun CitySearchCardPreview() {
         CitySearchCard(
             city = CitySearchUI(
                 "1",
-                "San Salvador",
-                "El salvador"
+                "San Salvador, El salvador"
             ),
             onSaveClick = {},
             onDetailClick = {}

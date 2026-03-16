@@ -5,15 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.city.presentation.city_search.mappers.toCitySearchUIList
+import com.example.city.presentation.city_search.mappers.toUiDomain
 import com.jnasser.core.domain.usecases.GetPlacesSuggestionsUseCase
 import com.jnasser.core.domain.util.result_handler.Result
 import com.jnasser.core.presentation.ui.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.math.acos
 
 class CitySearchViewModel(
     private val getPlacesSuggestionsUseCase: GetPlacesSuggestionsUseCase
@@ -46,7 +44,7 @@ class CitySearchViewModel(
             state = state.copy(isLoading = false)
             when(result) {
                 is Result.Error -> eventChannel.send(CitySearchEvents.Error(result.error.asUiText()))
-                is Result.Success -> state = state.copy(suggestions = result.data.toCitySearchUIList())
+                is Result.Success -> state = state.copy(suggestions = result.data.toUiDomain())
             }
         }
     }

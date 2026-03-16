@@ -99,18 +99,15 @@ private fun CitySearchScreenPreview() {
                 suggestions = listOf(
                     CitySearchUI(
                         "1",
-                        "San Salvador",
-                        "El Salvador"
+                        "San Salvador, El Salvador"
                     ),
                     CitySearchUI(
                         "2",
-                        "San Marino",
-                        "Islas"
+                        "San Marino, Islas"
                     ),
                     CitySearchUI(
                         "1",
-                        "San Sebastian",
-                        "Espana"
+                        "San Sebastian, Espana"
                     )
                 )
             ),
