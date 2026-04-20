@@ -3,7 +3,7 @@ package com.jnasser.weather.presentation.weather_detail.composables.wind
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,11 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -41,6 +36,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.jnasser.core.domain.enums.WindUnitsEnum
 import com.jnasser.core.presentation.designsystem.components.WindFieldOverlay
 import com.jnasser.core.presentation.designsystem.components.animations.AnimatedContent
+import com.jnasser.core.presentation.designsystem.components.animations.WeatherMotionTokens
+import com.jnasser.core.presentation.designsystem.components.animations.rememberWeatherMotionSettings
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.core.presentation.designsystem.theme.WeatherDarkBlue
 import com.jnasser.core.presentation.designsystem.theme.WeatherGrey
@@ -55,22 +52,19 @@ fun WindContainer(
     windUnit: WindUnitsEnum,
     onAction: (WeatherDetailAction) -> Unit
 ) {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        visible = true
-    }
+    val motion = rememberWeatherMotionSettings()
 
     AnimatedContent(
-        visible = visible,
+        visible = true,
         enterAnim = fadeIn(
             animationSpec = tween(
-                durationMillis = 500,
+                durationMillis = motion.durationMillis(WeatherMotionTokens.Long),
                 easing = FastOutSlowInEasing
             )
-        ) + scaleIn(
+        ) + slideInVertically(
+            initialOffsetY = { it / 10 },
             animationSpec = tween(
-                durationMillis = 300,
+                durationMillis = motion.durationMillis(WeatherMotionTokens.Long),
                 easing = FastOutSlowInEasing
             )
         ),
@@ -106,7 +100,7 @@ fun WindContainer(
 
                     WindFieldOverlay(
                         modifier = Modifier.fillMaxSize(),
-                        streakCount = 100,
+                        streakCount = 48,
                         targetPoint = Offset(0.25f, 0.2f)
                     )
 

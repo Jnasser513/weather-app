@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.presentation.designsystem.components.animations.AnimatedContent
+import com.jnasser.core.presentation.designsystem.components.animations.WeatherMotionTokens
+import com.jnasser.core.presentation.designsystem.components.animations.rememberWeatherMotionSettings
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.weather.domain.repositories.ForecastSelection
 import com.jnasser.weather.presentation.R
@@ -33,22 +38,33 @@ fun ForecastContainer(
     selectedToggle: ForecastSelection = ForecastSelection.DAILY,
     onDailyClick: () -> Unit,
     onHourlyClick: () -> Unit,
-    selectedItem: (Long) -> Unit
+    selectedItem: (Long) -> Unit,
+    onForecastAnimationsComplete: () -> Unit = {}
 ) {
-    var visible by remember { mutableStateOf(false) }
-
-    var showForecastList by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        visible = true
+    val motion = rememberWeatherMotionSettings()
+    var showForecastList by rememberSaveable(forecastList.size) {
+        mutableStateOf(!motion.animationsEnabled)
     }
+    val enterDuration = motion.durationMillis(WeatherMotionTokens.Long)
 
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
         AnimatedContent(
-            visible = visible,
-            onAnimationEnd = {
+            visible = true,
+            enterAnim = fadeIn(
+                animationSpec = tween(
+                    durationMillis = enterDuration,
+                    easing = FastOutSlowInEasing
+                )
+            ) + slideInVertically(
+                initialOffsetY = { it / 4 },
+                animationSpec = tween(
+                    durationMillis = enterDuration,
+                    easing = FastOutSlowInEasing
+                )
+            ),
+            onShown = {
                 showForecastList = true
             },
             content = {
@@ -78,7 +94,8 @@ fun ForecastContainer(
         if(showForecastList) {
             ForecastList(
                 forecastList = forecastList,
-                selectedItem = selectedItem
+                selectedItem = selectedItem,
+                onAnimationsComplete = onForecastAnimationsComplete
             )
         }
     }

@@ -30,7 +30,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CitySearchScreenRoot(
     viewModel: CitySearchViewModel = koinViewModel(),
-    onCityDetail: (Double, Double) -> Unit,
+    onCityDetail: (String) -> Unit,
     onReturn: () -> Unit
 ) {
     val context = LocalContext.current
@@ -51,7 +51,7 @@ fun CitySearchScreenRoot(
         state = viewModel.state,
         onAction = { action ->
             when(action) {
-                is CitySearchAction.OnCityDetail -> onCityDetail(0.0 ,0.0)
+                is CitySearchAction.OnCityDetail -> onCityDetail(action.cityId)
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -92,7 +92,7 @@ fun CitySearchScreen(
                 CitySearchList(
                     cityList = state.suggestions,
                     onDetailClick = { item ->
-                        onAction(CitySearchAction.OnCityDetail(0.0, 0.0))
+                        onAction(CitySearchAction.OnCityDetail(item.id))
                     },
                     onSaveClick = { item ->
                         onAction(CitySearchAction.OnSaveCity(item))

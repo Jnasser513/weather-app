@@ -36,14 +36,14 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CitySavedListScreenRoot(
     viewModel: CitySavedListViewModel = koinViewModel(),
-    onCityDetail: (Double, Double) -> Unit,
+    onCityDetail: (String) -> Unit,
     onCitySearch: () -> Unit
 ) {
     CitySavedListScreen(
         state = viewModel.state,
         onAction = { action ->
             when(action) {
-                is CitySavedListAction.OnCityDetail -> onCityDetail(action.lat, action.lon)
+                is CitySavedListAction.OnCityDetail -> onCityDetail(action.cityId)
                 CitySavedListAction.OnSearchCity -> onCitySearch()
             }
         }
@@ -91,7 +91,7 @@ fun CitySavedListScreen(
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(state.cities) { city ->
                     CityCard(city = city, onClick = {
-                        onAction(CitySavedListAction.OnCityDetail(city.lat, city.lon))
+                        onAction(CitySavedListAction.OnCityDetail(city.id))
                     })
                 }
             }

@@ -1,11 +1,15 @@
 package com.example.city.presentation.city_search.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +45,8 @@ import androidx.compose.ui.unit.sp
 import com.example.city.presentation.R
 import com.example.city.presentation.city_search.model.CitySearchUI
 import com.jnasser.core.domain.extensions.toggle
+import com.jnasser.core.presentation.designsystem.components.animations.WeatherMotionTokens
+import com.jnasser.core.presentation.designsystem.components.animations.rememberWeatherMotionSettings
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
 import com.jnasser.core.presentation.designsystem.theme.WeatherWhite
 
@@ -51,10 +57,12 @@ fun CitySearchCard(
     onDetailClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val motion = rememberWeatherMotionSettings()
+    val expandDuration = motion.durationMillis(WeatherMotionTokens.Medium)
 
     val rotation by animateFloatAsState(
         targetValue = if(expanded) 180f else 0f,
-        animationSpec = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
+        animationSpec = tween(durationMillis = expandDuration, easing = LinearOutSlowInEasing),
         label = "iconRotation"
     )
 
@@ -66,6 +74,12 @@ fun CitySearchCard(
     ) {
         Column(
             modifier = Modifier
+                .animateContentSize(
+                    animationSpec = tween(
+                        durationMillis = expandDuration,
+                        easing = FastOutSlowInEasing
+                    )
+                )
                 .padding(16.dp)
                 .fillMaxWidth(),
         ) {
@@ -89,15 +103,15 @@ fun CitySearchCard(
                     contentDescription = null
                 )
             }
-            if(expanded) {
+            AnimatedVisibility(
+                visible = expanded,
+                enter = fadeIn(animationSpec = tween(expandDuration)) +
+                    expandVertically(animationSpec = tween(expandDuration)),
+                exit = fadeOut(animationSpec = tween(expandDuration)) +
+                    shrinkVertically(animationSpec = tween(expandDuration))
+            ) {
                 Row(
                     modifier = Modifier
-                        .animateContentSize(
-                            animationSpec = spring(
-                                dampingRatio = Spring.DampingRatioHighBouncy,
-                                stiffness = Spring.StiffnessLow
-                            )
-                        )
                         .fillMaxWidth()
                 ) {
                     Button(

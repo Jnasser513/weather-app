@@ -63,8 +63,7 @@ fun NavigationRoot(navController: NavHostController) {
                 val route = backStackEntry.toRoute<WeatherDetailRoute>()
 
                 WeatherDetailScreenRoot(
-                    lat = route.lat,
-                    lon = route.lon,
+                    cityId = route.cityId,
                     goHome = {
                         navController.navigate(CitySavedListRoute) {
                             popUpTo(CityGraphRoute) {
@@ -92,8 +91,8 @@ private fun NavGraphBuilder.cityGraph(navController: NavHostController) {
             }
         ) {
             CitySavedListScreenRoot(
-                onCityDetail = { lat, lon ->
-                    navController.navigate(WeatherDetailRoute(lat, lon))
+                onCityDetail = { cityId ->
+                    navController.navigate(WeatherDetailRoute(cityId))
                 },
                 onCitySearch = {
                     navController.navigate(CitySearchRoute)
@@ -128,8 +127,8 @@ private fun NavGraphBuilder.cityGraph(navController: NavHostController) {
             }
         ) {
             CitySearchScreenRoot(
-                onCityDetail = { lat, lon ->
-                    navController.navigate(WeatherDetailRoute(lat, lon))
+                onCityDetail = { cityId ->
+                    navController.navigate(WeatherDetailRoute(cityId))
                 },
                 onReturn = {
                     navController.navigateUp()
