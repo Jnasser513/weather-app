@@ -9,3 +9,10 @@ fun City.toUiDomain() = CitySearchUI(
     id = id,
     place = place
 )
+
+fun CitySearchUI.toDomain() = City(
+    id = id,
+    place = place,
+    lat = 0.0,
+    lon = 0.0
+)

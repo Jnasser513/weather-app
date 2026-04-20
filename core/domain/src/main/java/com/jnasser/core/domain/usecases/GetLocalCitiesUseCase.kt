@@ -9,7 +9,5 @@ class GetLocalCitiesUseCase(
     private val repository: CityRepository
 ) {
 
-    suspend operator fun invoke() = withContext(dispatcherProvider.io) {
-        repository.getCities()
-    }
+    operator fun invoke() = repository.getCities()
 }

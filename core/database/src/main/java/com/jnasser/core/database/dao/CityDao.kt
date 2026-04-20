@@ -12,5 +12,8 @@ interface CityDao {
     suspend fun upsert(city: CityEntity)
 
     @Query("SELECT * FROM city_entity")
-    suspend fun getAll(): Flow<List<CityEntity>>
+    fun getAll(): Flow<List<CityEntity>>
+
+    @Query("SELECT * FROM city_entity WHERE id = :id")
+    suspend fun getById(id: String): CityEntity?
 }

@@ -10,6 +10,7 @@ interface CityRepository {
     suspend fun findAutocompletePredictions(query: String): Result<List<City>, DataError.Network>
     suspend fun getPlaceLatLng(city: City): Result<City, DataError.Network>
 
-    suspend fun getCities(): Flow<List<City>>
+    fun getCities(): Flow<List<City>>
+    suspend fun getCityById(cityId: String): Result<City, DataError.Local>
     suspend fun upsertCity(city: City): Result<CityId, DataError.Local>
 }

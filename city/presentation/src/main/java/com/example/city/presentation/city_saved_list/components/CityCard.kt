@@ -22,11 +22,13 @@ import com.example.city.presentation.city_saved_list.model.CitySummary
 
 @Composable
 fun CityCard(city: CitySummary, onClick: () -> Unit) {
-    Card(shape = RoundedCornerShape(20.dp),
+    Card(
+        onClick = onClick,
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF3A3A4D)),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }) {
+    ) {
         Row(
             modifier = Modifier
                 .padding(16.dp)

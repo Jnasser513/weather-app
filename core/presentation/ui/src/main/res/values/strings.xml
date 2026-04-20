@@ -7,6 +7,7 @@
     <string name="error_server_error">Somethin went wrong, please try again</string>
     <string name="error_error_serialization">couldnt parse data</string>
     <string name="error_unknown">And unknown error occured</string>
+    <string name="data_not_found">Data not found</string>
 
     <string name="wind_description_calm">Calm</string>
     <string name="wind_description_light_air">Light air</string>

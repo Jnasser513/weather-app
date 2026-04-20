@@ -36,14 +36,14 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CitySavedListScreenRoot(
     viewModel: CitySavedListViewModel = koinViewModel(),
-    onCityDetail: (Long) -> Unit,
+    onCityDetail: (Double, Double) -> Unit,
     onCitySearch: () -> Unit
 ) {
     CitySavedListScreen(
         state = viewModel.state,
         onAction = { action ->
             when(action) {
-                is CitySavedListAction.OnCityDetail -> onCityDetail(action.id)
+                is CitySavedListAction.OnCityDetail -> onCityDetail(action.lat, action.lon)
                 CitySavedListAction.OnSearchCity -> onCitySearch()
             }
         }
@@ -77,7 +77,7 @@ fun CitySavedListScreen(
                         colors = listOf(Color(0xFF1C1C2D), Color(0xFF2E2E3D))
                     )
                 )
-                .padding(horizontal = 16.dp)
+                .padding(16.dp)
                 .systemBarsPadding()
         ) {
             Text(
@@ -90,7 +90,9 @@ fun CitySavedListScreen(
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(state.cities) { city ->
-                    CityCard(city = city, onClick = { onAction(CitySavedListAction.OnCityDetail(city.id)) })
+                    CityCard(city = city, onClick = {
+                        onAction(CitySavedListAction.OnCityDetail(city.lat, city.lon))
+                    })
                 }
             }
         }
@@ -106,10 +108,12 @@ private fun CitySavedListScreenPreview() {
                 isLoading = false,
                 cities = listOf(
                     CitySummary(
-                        id = 1,
+                        id = "1",
                         name = "San Diego",
                         temperature = "10.8",
-                        condition = "Too Cold"
+                        condition = "Too Cold",
+                        0.0,
+                        0.0
                     )
                 )
             )

@@ -9,6 +9,7 @@ sealed interface WeatherDetailAction {
     data class OnSelectToggle(val selection: ForecastSelection): WeatherDetailAction
     data object OnMapDetail: WeatherDetailAction
     data object OnGetTemperatureUnits: WeatherDetailAction
+    data class OnGetCityDetail(val cityId: String): WeatherDetailAction
     data class OnGetWeatherDetail(val lat: Double, val lon: Double): WeatherDetailAction
     data class OnSelectForecast(val time: Long): WeatherDetailAction
     data class OnFollowUp(val city: CityDetail): WeatherDetailAction

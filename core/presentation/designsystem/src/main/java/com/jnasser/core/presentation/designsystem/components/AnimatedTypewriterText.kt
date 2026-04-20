@@ -76,32 +76,37 @@ fun AnimatedText(
     highlightColor: Color = MaterialTheme.colorScheme.onSurface,
     defaultColor: Color = MaterialTheme.colorScheme.surface,
     textStyle: TextStyle = MaterialTheme.typography.headlineMedium,
-    delayPerWord: Long = 100L
+    delayPerWord: Long = 100L,
+    hasAnimated: Boolean = false
 ) {
-
     val exitAnimDelay = 500
 
     val wordsWithSpaces = remember(text) {
-        // Regex para dividir y conservar los espacios
         Regex("""\S+\s*""").findAll(text).map { it.value }.toList()
     }
 
-    val visibleStates = remember { mutableStateListOf<Boolean>() }
-
-    LaunchedEffect(text) {
-        delay(exitAnimDelay.milliseconds)
-        visibleStates.clear()
-        repeat(wordsWithSpaces.size) { visibleStates.add(false) }
-
-        wordsWithSpaces.indices.forEach { index ->
-            delay(delayPerWord)
-            visibleStates[index] = true
+    val visibleStates = remember(text, hasAnimated) {
+        mutableStateListOf<Boolean>().apply {
+            repeat(wordsWithSpaces.size) {
+                add(hasAnimated)
+            }
         }
     }
 
-    FlowRow(
-        modifier = modifier
-    ) {
+    LaunchedEffect(text, hasAnimated) {
+        if (!hasAnimated) {
+            delay(exitAnimDelay.toLong())
+            visibleStates.clear()
+            repeat(wordsWithSpaces.size) { visibleStates.add(false) }
+
+            wordsWithSpaces.indices.forEach { index ->
+                delay(delayPerWord)
+                visibleStates[index] = true
+            }
+        }
+    }
+
+    FlowRow(modifier = modifier) {
         wordsWithSpaces.forEachIndexed { index, word ->
             val isHighlighted = index in highlightWordPositions
             val color = if (isHighlighted) highlightColor else defaultColor
@@ -109,7 +114,10 @@ fun AnimatedText(
             AnimatedContent(
                 visible = visibleStates.getOrNull(index) == true,
                 enterAnim = fadeIn(animationSpec = tween(500)) +
-                        slideInVertically(initialOffsetY = { it / 2 }, animationSpec = tween(500)),
+                        slideInVertically(
+                            initialOffsetY = { it / 2 },
+                            animationSpec = tween(500)
+                        ),
                 exitAnim = fadeOut(animationSpec = tween(exitAnimDelay)),
                 content = {
                     Text(

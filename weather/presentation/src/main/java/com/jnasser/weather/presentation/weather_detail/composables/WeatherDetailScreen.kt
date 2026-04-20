@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,8 +51,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun WeatherDetailScreenRoot(
     viewModel: WeatherDetailViewModel = koinViewModel(),
+    cityId: String,
     goHome: () -> Unit
 ) {
+    LaunchedEffect(cityId) {
+        viewModel.onAction(WeatherDetailAction.OnGetCityDetail(cityId))
+    }
+
     WeatherDetailScreen(state = viewModel.state, onAction = { action ->
         when (action) {
             WeatherDetailAction.OnGoHome -> goHome()
@@ -124,7 +130,7 @@ fun WeatherDetailScreen(
                 .fillMaxSize()
                 .padding(padding),
             items = listOf(
-                {
+                { hasAnimated ->
                     val text = if (state.weatherSelection.isCurrent) stringResource(
                         R.string.temperature_today_description,
                         "${state.weatherSelection.currentTemp}${state.temperatureUnits.symbol}",
@@ -140,12 +146,13 @@ fun WeatherDetailScreen(
                         text = text,
                         highlightWordPositions =
                             if (state.weatherSelection.isCurrent) listOf(2, 4, 5)
-                            else listOf()
+                            else listOf(),
+                        hasAnimated = hasAnimated
                     )
                     Spacer(Modifier.height(40.dp))
                 },
                 {
-                    val today = state.weather.daily?.first() { DateUtils.isToday(it.dt) }
+                    val today = state.weather.daily?.firstOrNull { DateUtils.isToday(it.dt) }
                     val forecastList = state.weather.daily?.map { forecast ->
                         if (forecast == today) {
                             val minTemp = forecast.temp.min ?: 0f

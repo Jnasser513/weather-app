@@ -20,7 +20,10 @@ class OfflineFirstCityRepository(
     override suspend fun getPlaceLatLng(city: City): Result<City, DataError.Network> =
         gcpPlacesDataSource.getPlaceLatLng(city)
 
-    override suspend fun getCities(): Flow<List<City>> = localCityDataSource.getCities()
+    override fun getCities(): Flow<List<City>> = localCityDataSource.getCities()
+
+    override suspend fun getCityById(cityId: String): Result<City, DataError.Local> =
+        localCityDataSource.getCityById(cityId)
 
     override suspend fun upsertCity(city: City): Result<CityId, DataError.Local> =
         localCityDataSource.upsertCity(city)
