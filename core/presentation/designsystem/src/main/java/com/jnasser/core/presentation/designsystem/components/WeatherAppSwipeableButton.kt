@@ -1,15 +1,10 @@
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -41,9 +36,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.jnasser.core.domain.extensions.textOrAlternative
+import com.jnasser.core.presentation.designsystem.components.animations.WeatherMotionTokens
+import com.jnasser.core.presentation.designsystem.components.animations.rememberWeatherMotionSettings
 import com.jnasser.core.presentation.designsystem.R
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
-import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 enum class ConfirmationState {
@@ -60,41 +56,30 @@ fun WeatherAppAnimatedSwipeableButton(
     draggableIconInactive: @Composable () -> Unit,
     onComplete: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    
+    val motion = rememberWeatherMotionSettings()
+    var expanded by remember(motion.durationScale) { mutableStateOf(!motion.animationsEnabled) }
+
     val buttonWidth by animateDpAsState(
         targetValue = if(expanded) 140.dp else 56.dp,
-        animationSpec = tween(500)
+        animationSpec = tween(motion.durationMillis(WeatherMotionTokens.Medium)),
+        label = "swipeable_button_width"
     )
 
-    LaunchedEffect(Unit) {
-        delay(500)
+    LaunchedEffect(motion.durationScale) {
         expanded = true
     }
 
-    if(expanded) {
-        AnimatedContent(
-            targetState = expanded,
-            transitionSpec = {
-                fadeIn(tween(300)) togetherWith fadeOut(tween(300))
-            }
-        ) {
-            if(it) {
-                WeatherAppSwipeableButton(
-                    modifier = modifier
-                        .height(56.dp)
-                        .width(buttonWidth)
-                        .animateContentSize(tween(durationMillis = 500)),
-                    initialState = initialState,
-                    buttonText = initialState.textOrAlternative(buttonText),
-                    buttonTextAlternative = initialState.textOrAlternative(buttonTextAlternative.orEmpty(), buttonText),
-                    draggableIconActive = draggableIconActive,
-                    draggableIconInactive = draggableIconInactive,
-                    onComplete = onComplete
-                )
-            }
-        }
-    }
+    WeatherAppSwipeableButton(
+        modifier = modifier
+            .height(56.dp)
+            .width(buttonWidth),
+        initialState = initialState,
+        buttonText = initialState.textOrAlternative(buttonText),
+        buttonTextAlternative = initialState.textOrAlternative(buttonTextAlternative.orEmpty(), buttonText),
+        draggableIconActive = draggableIconActive,
+        draggableIconInactive = draggableIconInactive,
+        onComplete = onComplete
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -142,11 +127,6 @@ fun WeatherAppSwipeableButton(
         val (text, draggable) = createRefs()
 
         val isComplete = state.currentValue == ConfirmationState.Confirmed
-
-        LaunchedEffect(Unit) {
-            delay(200)
-        }
-
         Text(
             modifier = Modifier.constrainAs(text) {
                 if(isComplete) {
@@ -204,7 +184,7 @@ private fun DraggableControl(
         contentAlignment = Alignment.Center
     ) {
         val isConfirmed = progress >= 0.8f
-        Crossfade(targetState = isConfirmed) {
+        Crossfade(targetState = isConfirmed, label = "swipeable_icon_state") {
             if (it) {
                 draggableIconActive()
             } else {

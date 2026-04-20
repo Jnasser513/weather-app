@@ -3,9 +3,8 @@
 package com.jnasser.weather.presentation.weather_detail.composables
 
 import WeatherAppAnimatedSwipeableButton
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -15,6 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,12 +24,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.domain.city.CityDetail
 import com.jnasser.core.domain.util.DateUtils
 import com.jnasser.core.domain.weather.model.WeatherDetail
 import com.jnasser.core.presentation.designsystem.components.AnimatedText
 import com.jnasser.core.presentation.designsystem.components.animations.SequentialAnimatedItems
+import com.jnasser.core.presentation.designsystem.components.animations.WeatherMotionTokens
+import com.jnasser.core.presentation.designsystem.components.animations.rememberWeatherMotionSettings
 import com.jnasser.core.presentation.designsystem.components.WeatherAppScaffold
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBar
 import com.jnasser.core.presentation.designsystem.components.WeatherTopAppBarConfig
@@ -44,14 +47,21 @@ import com.jnasser.weather.presentation.weather_detail.WeatherDetailViewModel
 import com.jnasser.weather.presentation.weather_detail.composables.forecast.ForecastContainer
 import com.jnasser.weather.presentation.weather_detail.composables.wind.WindContainer
 import com.jnasser.weather.presentation.weather_detail.model.UVDataUi
+import com.jnasser.weather.presentation.weather_detail.model.ForecastDataUi
 import com.jnasser.weather.presentation.weather_detail.model.toForecastDataUi
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WeatherDetailScreenRoot(
     viewModel: WeatherDetailViewModel = koinViewModel(),
+    cityId: String,
     goHome: () -> Unit
 ) {
+    LaunchedEffect(cityId) {
+        viewModel.onAction(WeatherDetailAction.OnGetCityDetail(cityId))
+    }
+
     WeatherDetailScreen(state = viewModel.state, onAction = { action ->
         when (action) {
             WeatherDetailAction.OnGoHome -> goHome()
@@ -68,9 +78,52 @@ fun WeatherDetailScreen(
     onAction: (WeatherDetailAction) -> Unit
 ) {
     val context = LocalContext.current
+    val motion = rememberWeatherMotionSettings()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val contentSpacing = 22.dp
 
+    val today = state.weather.daily?.firstOrNull { DateUtils.isToday(it.dt) }
+    val forecastList = state.weather.daily?.map { forecast ->
+        if (forecast == today) {
+            val minTemp = forecast.temp.min ?: 0f
+            val maxTemp = forecast.temp.max ?: 0f
+            val currentTemp = state.weather.current?.temp
+
+            val progress = if (currentTemp != null && maxTemp != minTemp) {
+                ((currentTemp - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
+            } else {
+                0f
+            }
+            forecast.toForecastDataUi(
+                state.temperatureUnits.symbol,
+                progress,
+                currentTemp
+            )
+        } else {
+            forecast.toForecastDataUi(state.temperatureUnits.symbol)
+        }
+    }.orEmpty()
+    val forecastAnimationKey = forecastList.map(ForecastDataUi::dt)
+
+    var showDeferredContainers by remember { mutableStateOf(false) }
     var showFab by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state.isLoading, forecastAnimationKey) {
+        showDeferredContainers = false
+        showFab = false
+    }
+
+    LaunchedEffect(showDeferredContainers, motion.durationScale) {
+        if (!showDeferredContainers) return@LaunchedEffect
+
+        if (!motion.animationsEnabled) {
+            showFab = true
+            return@LaunchedEffect
+        }
+
+        delay(motion.staggerMillis(WeatherMotionTokens.Stagger))
+        showFab = true
+    }
 
     WeatherAppScaffold(
         isLoading = state.isLoading,
@@ -122,9 +175,15 @@ fun WeatherDetailScreen(
         SequentialAnimatedItems(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
+                .navigationBarsPadding(),
+            contentPadding = weatherDetailContentPadding(contentSpacing),
+            itemSpacing = contentSpacing,
+            itemEnterDurationMillis = WeatherMotionTokens.Extended,
+            itemStaggerMillis = 160,
+            itemOffsetPx = 22,
             items = listOf(
-                {
+                { hasAnimated ->
                     val text = if (state.weatherSelection.isCurrent) stringResource(
                         R.string.temperature_today_description,
                         "${state.weatherSelection.currentTemp}${state.temperatureUnits.symbol}",
@@ -140,33 +199,13 @@ fun WeatherDetailScreen(
                         text = text,
                         highlightWordPositions =
                             if (state.weatherSelection.isCurrent) listOf(2, 4, 5)
-                            else listOf()
+                            else listOf(),
+                        hasAnimated = hasAnimated
                     )
-                    Spacer(Modifier.height(40.dp))
                 },
                 {
-                    val today = state.weather.daily?.first() { DateUtils.isToday(it.dt) }
-                    val forecastList = state.weather.daily?.map { forecast ->
-                        if (forecast == today) {
-                            val minTemp = forecast.temp.min ?: 0f
-                            val maxTemp = forecast.temp.max ?: 0f
-                            val currentTemp = state.weather.current?.temp
-
-                            val progress = if (currentTemp != null && maxTemp != minTemp) {
-                                ((currentTemp - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
-                            } else {
-                                0f
-                            }
-                            forecast.toForecastDataUi(
-                                state.temperatureUnits.symbol,
-                                progress,
-                                currentTemp
-                            )
-                        } else forecast.toForecastDataUi(state.temperatureUnits.symbol)
-                    }
-
                     ForecastContainer(
-                        forecastList = forecastList.orEmpty(),
+                        forecastList = forecastList,
                         selectedToggle = state.forecastSelection,
                         onDailyClick = {
                             onAction(WeatherDetailAction.OnSelectToggle(ForecastSelection.DAILY))
@@ -176,41 +215,51 @@ fun WeatherDetailScreen(
                         },
                         selectedItem = { time ->
                             onAction(WeatherDetailAction.OnSelectForecast(time))
+                        },
+                        onForecastAnimationsComplete = {
+                            showDeferredContainers = true
                         }
                     )
-                    Spacer(Modifier.height(30.dp))
                 },
                 {
-                    val windTitle =
-                        context.getLocalizedWindDescription(state.weatherSelection.windSpeed)
-                    val windDirection =
-                        context.getWindDirectionFromDegrees(state.weatherSelection.windDeg)
-                    WindContainer(
-                        windDataUi = state.weatherSelection.windData.copy(
-                            title = windTitle,
-                            direction = windDirection
-                        ),
-                        windUnit = state.windUnit,
-                        onAction = onAction
-                    )
-                    Spacer(Modifier.height(10.dp))
-                },
-                {
-                    ExtraDataComponents(
-                        uvDataUi = UVDataUi(
-                            uvValue = 1,
-                            state = "Low",
-                            preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
+                    if (showDeferredContainers) {
+                        val windTitle =
+                            context.getLocalizedWindDescription(state.weatherSelection.windSpeed)
+                        val windDirection =
+                            context.getWindDirectionFromDegrees(state.weatherSelection.windDeg)
+                        WindContainer(
+                            windDataUi = state.weatherSelection.windData.copy(
+                                title = windTitle,
+                                direction = windDirection
+                            ),
+                            windUnit = state.windUnit,
+                            onAction = onAction
                         )
-                    )
+                    }
+                },
+                {
+                    if (showDeferredContainers) {
+                        ExtraDataComponents(
+                            uvDataUi = UVDataUi(
+                                uvValue = 1,
+                                state = "Low",
+                                preventUVHours = listOf("12pm", "1pm", "2pm", "3pm")
+                            )
+                        )
+                    }
                 }
             ),
-            onSequenceEnd = {
-                showFab = true
-            }
+            onSequenceEnd = {}
         )
     }
 }
+
+private fun weatherDetailContentPadding(itemSpacing: Dp) = androidx.compose.foundation.layout.PaddingValues(
+    start = 20.dp,
+    top = 24.dp,
+    end = 20.dp,
+    bottom = itemSpacing + 88.dp
+)
 
 
 @Preview

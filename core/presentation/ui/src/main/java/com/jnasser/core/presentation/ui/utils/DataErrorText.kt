@@ -9,6 +9,9 @@ fun DataError.asUiText(): UiText {
         DataError.Local.DISK_FULL -> UiText.StringResource(
             R.string.error_disk_full
         )
+        DataError.Local.NOT_FOUND -> UiText.StringResource(
+            R.string.data_not_found
+        )
         DataError.Network.REQUEST_TIMEOUT -> UiText.StringResource(
             R.string.error_request_timeout
         )

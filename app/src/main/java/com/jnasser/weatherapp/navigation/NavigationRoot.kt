@@ -1,7 +1,6 @@
 package com.jnasser.weatherapp.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -10,19 +9,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.example.city.presentation.city_saved_list.components.CitySavedListScreenRoot
 import com.example.city.presentation.city_search.composables.CitySearchScreenRoot
 import com.jnasser.weather.presentation.weather_detail.composables.WeatherDetailScreenRoot
 import kotlinx.serialization.Serializable
 
-@Serializable data object CityGraphRoute
-@Serializable data object WeatherGraphRoute
+@Serializable
+data object CityGraphRoute
+
+@Serializable
+data object CitySavedListRoute
+
+@Serializable
+data object CitySearchRoute
+
+@Serializable
+data class WeatherDetailRoute(
+    val cityId: String
+)
 
 @Composable
 fun NavigationRoot(navController: NavHostController) {
@@ -35,13 +45,38 @@ fun NavigationRoot(navController: NavHostController) {
             startDestination = CityGraphRoute
         ) {
             cityGraph(navController)
-            weatherGraph(navController)
+
+            composable<WeatherDetailRoute>(
+                enterTransition = {
+                    fadeIn(animationSpec = tween(250))
+                },
+                exitTransition = {
+                    fadeOut(animationSpec = tween(250))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(250))
+                },
+                popExitTransition = {
+                    fadeOut(animationSpec = tween(250))
+                }
+            ) { backStackEntry ->
+                val route = backStackEntry.toRoute<WeatherDetailRoute>()
+
+                WeatherDetailScreenRoot(
+                    cityId = route.cityId,
+                    goHome = {
+                        navController.navigate(CitySavedListRoute) {
+                            popUpTo(CityGraphRoute) {
+                                inclusive = false
+                            }
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
         }
     }
 }
-
-@Serializable data object CitySavedListRoute
-@Serializable data object CitySearchRoute
 
 private fun NavGraphBuilder.cityGraph(navController: NavHostController) {
     navigation<CityGraphRoute>(
@@ -56,10 +91,12 @@ private fun NavGraphBuilder.cityGraph(navController: NavHostController) {
             }
         ) {
             CitySavedListScreenRoot(
-                onCityDetail = { id ->
-                    // TODO("Navigate to city detail")
+                onCityDetail = { cityId ->
+                    navController.navigate(WeatherDetailRoute(cityId))
                 },
-                onCitySearch = { navController.navigate(CitySearchRoute) }
+                onCitySearch = {
+                    navController.navigate(CitySearchRoute)
+                }
             )
         }
 
@@ -90,32 +127,11 @@ private fun NavGraphBuilder.cityGraph(navController: NavHostController) {
             }
         ) {
             CitySearchScreenRoot(
-                onCityDetail = {
-                    navController.navigate(WeatherGraphRoute)
+                onCityDetail = { cityId ->
+                    navController.navigate(WeatherDetailRoute(cityId))
                 },
                 onReturn = {
                     navController.navigateUp()
-                }
-            )
-        }
-    }
-}
-
-@Serializable data object WeatherDetailRoute
-
-private fun NavGraphBuilder.weatherGraph(navController: NavHostController) {
-    navigation<WeatherGraphRoute>(
-        startDestination = WeatherDetailRoute
-    ) {
-        composable<WeatherDetailRoute> {
-            WeatherDetailScreenRoot(
-                goHome = {
-                    navController.navigate(CitySavedListRoute) {
-                        popUpTo<CitySavedListRoute> {
-                            inclusive = false
-                        }
-                        launchSingleTop = true
-                    }
                 }
             )
         }

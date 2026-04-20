@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import com.jnasser.core.presentation.designsystem.components.animations.AnimatedContent
+import com.jnasser.core.presentation.designsystem.components.animations.WeatherMotionTokens
+import com.jnasser.core.presentation.designsystem.components.animations.rememberWeatherMotionSettings
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -37,9 +39,14 @@ fun AnimatedTypewriterText(
     primaryColor: Color = MaterialTheme.colorScheme.surface,
     defaultColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
+    val motion = rememberWeatherMotionSettings()
+    val letterDelay = motion.staggerMillis(delayPerLetter.toInt())
+
     Row(modifier = modifier) {
         text.forEachIndexed { index, char ->
-            var visible by remember { mutableStateOf(false) }
+            var visible by remember(text, motion.durationScale) {
+                mutableStateOf(!motion.animationsEnabled)
+            }
 
             var color = defaultColor
 
@@ -50,14 +57,24 @@ fun AnimatedTypewriterText(
                 }
             }
 
-            LaunchedEffect(Unit) {
-                delay(index * delayPerLetter)
+            LaunchedEffect(text, index, letterDelay, motion.durationScale) {
+                if (!motion.animationsEnabled) {
+                    visible = true
+                    return@LaunchedEffect
+                }
+
+                delay(index * letterDelay)
                 visible = true
             }
 
             AnimatedVisibility(
                 visible = visible,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
+                enter = fadeIn(
+                    animationSpec = tween(motion.durationMillis(WeatherMotionTokens.Short))
+                ) + slideInVertically(
+                    initialOffsetY = { it / 2 },
+                    animationSpec = tween(motion.durationMillis(WeatherMotionTokens.Short))
+                )
             ) {
                 Text(
                     char.toString(),
@@ -76,40 +93,54 @@ fun AnimatedText(
     highlightColor: Color = MaterialTheme.colorScheme.onSurface,
     defaultColor: Color = MaterialTheme.colorScheme.surface,
     textStyle: TextStyle = MaterialTheme.typography.headlineMedium,
-    delayPerWord: Long = 100L
+    delayPerWord: Long = 100L,
+    hasAnimated: Boolean = false
 ) {
-
-    val exitAnimDelay = 500
+    val motion = rememberWeatherMotionSettings()
+    val exitAnimDelay = motion.durationMillis(WeatherMotionTokens.Medium)
+    val enterDuration = motion.durationMillis(WeatherMotionTokens.Long)
+    val wordDelay = motion.staggerMillis(delayPerWord.toInt())
 
     val wordsWithSpaces = remember(text) {
-        // Regex para dividir y conservar los espacios
         Regex("""\S+\s*""").findAll(text).map { it.value }.toList()
     }
 
-    val visibleStates = remember { mutableStateListOf<Boolean>() }
-
-    LaunchedEffect(text) {
-        delay(exitAnimDelay.milliseconds)
-        visibleStates.clear()
-        repeat(wordsWithSpaces.size) { visibleStates.add(false) }
-
-        wordsWithSpaces.indices.forEach { index ->
-            delay(delayPerWord)
-            visibleStates[index] = true
+    val visibleStates = remember(text, hasAnimated) {
+        mutableStateListOf<Boolean>().apply {
+            repeat(wordsWithSpaces.size) {
+                add(hasAnimated)
+            }
         }
     }
 
-    FlowRow(
-        modifier = modifier
-    ) {
+    LaunchedEffect(text, hasAnimated) {
+        if (!hasAnimated && motion.animationsEnabled) {
+            delay(exitAnimDelay.toLong())
+            visibleStates.clear()
+            repeat(wordsWithSpaces.size) { visibleStates.add(false) }
+
+            wordsWithSpaces.indices.forEach { index ->
+                delay(wordDelay)
+                visibleStates[index] = true
+            }
+        } else if (!hasAnimated) {
+            visibleStates.clear()
+            repeat(wordsWithSpaces.size) { visibleStates.add(true) }
+        }
+    }
+
+    FlowRow(modifier = modifier) {
         wordsWithSpaces.forEachIndexed { index, word ->
             val isHighlighted = index in highlightWordPositions
             val color = if (isHighlighted) highlightColor else defaultColor
 
             AnimatedContent(
                 visible = visibleStates.getOrNull(index) == true,
-                enterAnim = fadeIn(animationSpec = tween(500)) +
-                        slideInVertically(initialOffsetY = { it / 2 }, animationSpec = tween(500)),
+                enterAnim = fadeIn(animationSpec = tween(enterDuration)) +
+                        slideInVertically(
+                            initialOffsetY = { it / 2 },
+                            animationSpec = tween(enterDuration)
+                        ),
                 exitAnim = fadeOut(animationSpec = tween(exitAnimDelay)),
                 content = {
                     Text(

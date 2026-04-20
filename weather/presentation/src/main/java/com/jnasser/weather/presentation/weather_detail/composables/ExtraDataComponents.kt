@@ -3,21 +3,18 @@ package com.jnasser.weather.presentation.weather_detail.composables
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jnasser.core.presentation.designsystem.components.animations.AnimatedContent
+import com.jnasser.core.presentation.designsystem.components.animations.WeatherMotionTokens
+import com.jnasser.core.presentation.designsystem.components.animations.rememberWeatherMotionSettings
 import com.jnasser.weather.presentation.weather_detail.composables.air_quality.AirQualityContainer
 import com.jnasser.weather.presentation.weather_detail.composables.uv.UVContainer
 import com.jnasser.weather.presentation.weather_detail.model.AirQualityDataUi
@@ -28,25 +25,22 @@ fun ExtraDataComponents(
     modifier: Modifier = Modifier,
     uvDataUi: UVDataUi
 ) {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        visible = true
-    }
+    val motion = rememberWeatherMotionSettings()
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxWidth()
     ) {
         AnimatedContent(
-            visible = visible,
+            visible = true,
             enterAnim = fadeIn(
                 animationSpec = tween(
-                    durationMillis = 500,
+                    durationMillis = motion.durationMillis(WeatherMotionTokens.Long),
                     easing = FastOutSlowInEasing
                 )
-            ) + scaleIn(
+            ) + slideInVertically(
+                initialOffsetY = { it / 10 },
                 animationSpec = tween(
-                    durationMillis = 300,
+                    durationMillis = motion.durationMillis(WeatherMotionTokens.Long),
                     easing = FastOutSlowInEasing
                 )
             ),

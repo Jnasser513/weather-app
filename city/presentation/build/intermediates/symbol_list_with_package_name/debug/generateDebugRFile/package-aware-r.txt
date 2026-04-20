@@ -1,4 +1,0 @@
-com.example.city.presentation
-string detail
-string save
-string saved_cities

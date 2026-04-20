@@ -1,0 +1,25 @@
+com.jnasser.core.presentation.ui
+array wind_directions
+string error_disk_full
+string error_error_serialization
+string error_no_internet
+string error_request_timeout
+string error_server_error
+string error_too_many_request
+string error_unknown
+string save
+string wind_description_calm
+string wind_description_fresh_breeze
+string wind_description_gale
+string wind_description_gentle_breeze
+string wind_description_hurricane_force
+string wind_description_light_air
+string wind_description_light_breeze
+string wind_description_moderate_breeze
+string wind_description_near_gale
+string wind_description_storm
+string wind_description_strong_breeze
+string wind_description_strong_gale
+string wind_description_whole_gale
+string wind_direction_no_info
+string wind_no_info

@@ -1,7 +1,6 @@
 package com.jnasser.core.presentation.designsystem.components
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -13,96 +12,99 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.fontscaling.MathUtils.lerp
+import com.jnasser.core.presentation.designsystem.components.animations.WeatherMotionTokens
+import com.jnasser.core.presentation.designsystem.components.animations.rememberWeatherMotionSettings
 import com.jnasser.core.presentation.designsystem.theme.WeatherAppTheme
+import kotlin.math.absoluteValue
 
 @Composable
 fun WindFieldOverlay(
     modifier: Modifier = Modifier,
-    streakCount: Int = 100,
+    streakCount: Int = 40,
     targetPoint: Offset = Offset(0.5f, 0.5f) // Centro relativo
 ) {
+    val motion = rememberWeatherMotionSettings()
     val infiniteTransition = rememberInfiniteTransition(label = "windField")
     val color = MaterialTheme.colorScheme.onSurface.copy(0.2f)
 
-    // Genera los datos una vez
-    val streaks = remember {
+    val streaks = remember(streakCount) {
         List(streakCount) {
             WindStreak(
                 start = Offset(
                     x = (0..1000).random() / 1000f,
                     y = (0..1000).random() / 1000f
                 ),
-                speed = (5000..10000).random()
+                phaseOffset = (0..1000).random() / 1000f,
+                alpha = (20..90).random() / 100f,
+                trailLength = (12..24).random() / 100f,
+                strokeWidth = (1..2).random().toFloat()
             )
         }
     }
 
-    // Animaciones
-    val animatedValues = streaks.mapIndexed { index, streak ->
+    val phase = if (motion.animationsEnabled) {
         infiniteTransition.animateFloat(
             initialValue = 0f,
             targetValue = 1f,
             animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = streak.speed, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
+                animation = tween(
+                    durationMillis = motion.durationMillis(WeatherMotionTokens.WindLoop),
+                    easing = LinearEasing
+                )
             ),
-            label = "streak_anim_$index"
+            label = "windFieldPhase"
         ).value
+    } else {
+        1f
     }
 
     Canvas(modifier = modifier.fillMaxSize()) {
+        if (!motion.animationsEnabled) return@Canvas
+
         val canvasWidth = size.width
         val canvasHeight = size.height
         val center = Offset(canvasWidth * targetPoint.x, canvasHeight * targetPoint.y)
 
-        val visibleFraction = 0.3f // Muestra solo la última parte del recorrido
-
         streaks.forEachIndexed { index, streak ->
-            val progress = animatedValues[index]
+            val progress = (phase + streak.phaseOffset) % 1f
 
             val start = Offset(
                 x = canvasWidth * streak.start.x,
                 y = canvasHeight * streak.start.y
             )
 
-            val startLerp = (progress - visibleFraction).coerceIn(0f, 1f)
+            val startLerp = (progress - streak.trailLength).coerceIn(0f, 1f)
             val endLerp = progress.coerceIn(0f, 1f)
 
-            val currentStart = Offset(
-                x = lerp(start.x, center.x, startLerp),
-                y = lerp(start.y, center.y, startLerp)
-            )
-            val currentEnd = Offset(
-                x = lerp(start.x, center.x, endLerp),
-                y = lerp(start.y, center.y, endLerp)
-            )
+            val currentStart = start.lerpTo(center, startLerp)
+            val currentEnd = start.lerpTo(center, endLerp)
+            val alpha = streak.alpha * (1f - (0.5f - progress).absoluteValue)
 
-            val path = Path().apply {
-                moveTo(currentStart.x, currentStart.y)
-                quadraticTo(
-                    (currentStart.x + currentEnd.x) / 2,
-                    (currentStart.y + currentEnd.y) / 2 + 10f,
-                    currentEnd.x,
-                    currentEnd.y
-                )
-            }
-
-            drawPath(
-                path,
-                color = color,
-                style = Stroke(width = 1.5f, cap = StrokeCap.Round)
+            drawLine(
+                color = color.copy(alpha = alpha.coerceIn(0.06f, 0.22f)),
+                start = currentStart,
+                end = currentEnd,
+                strokeWidth = streak.strokeWidth,
+                cap = StrokeCap.Round
             )
         }
     }
 }
 
-data class WindStreak(val start: Offset, val speed: Int)
+private fun Offset.lerpTo(target: Offset, fraction: Float): Offset = Offset(
+    x = x + ((target.x - x) * fraction),
+    y = y + ((target.y - y) * fraction)
+)
+
+data class WindStreak(
+    val start: Offset,
+    val phaseOffset: Float,
+    val alpha: Float,
+    val trailLength: Float,
+    val strokeWidth: Float
+)
 
 @Preview
 @Composable

@@ -1,12 +1,18 @@
 package com.example.city.presentation.city_search.mappers
 
 import com.example.city.presentation.city_search.model.CitySearchUI
-import com.jnasser.core.domain.city.Place
+import com.jnasser.core.domain.city.City
 
-fun List<Place>.toCitySearchUIList() = map { it.toCitySearchUI() }
+fun List<City>.toUiDomain() = map { it.toUiDomain() }
 
-fun Place.toCitySearchUI() = CitySearchUI(
+fun City.toUiDomain() = CitySearchUI(
     id = id,
-    primaryText = primaryText,
-    secondaryText = secondaryText
+    place = place
+)
+
+fun CitySearchUI.toDomain() = City(
+    id = id,
+    place = place,
+    lat = 0.0,
+    lon = 0.0
 )
